@@ -1,0 +1,1545 @@
+{
+  "users": {
+    "user-r2okuq5ld": {
+      "xp": 50,
+      "level": 1,
+      "gamesPlayed": {
+        "anatomy-map": 7,
+        "symptom-solver": 1
+      },
+      "joinedAt": "2026-03-28T06:27:16.648Z"
+    },
+    "user-bxag5d1hx": {
+      "xp": 100,
+      "level": 2,
+      "gamesPlayed": {
+        "stacker": 9,
+        "anatomy-map": 8,
+        "symptom-solver": 1
+      },
+      "joinedAt": "2026-03-28T06:31:59.914Z"
+    },
+    "user-oiokpr558": {
+      "xp": 105,
+      "level": 2,
+      "gamesPlayed": {
+        "neural-memory": 9
+      },
+      "joinedAt": "2026-03-28T06:40:32.420Z"
+    },
+    "user-g6lr60vyi": {
+      "xp": 10,
+      "level": 1,
+      "gamesPlayed": {
+        "stacker": 2
+      },
+      "joinedAt": "2026-03-28T06:53:18.307Z"
+    },
+    "user-c5t1o8r0q": {
+      "xp": 40,
+      "level": 1,
+      "gamesPlayed": {
+        "image-lab": 4
+      },
+      "joinedAt": "2026-03-28T11:04:08.479Z"
+    },
+    "user-rr2r8ia89": {
+      "xp": 95,
+      "level": 1,
+      "gamesPlayed": {
+        "anatomy-map": 2,
+        "symptom-solver": 2,
+        "stacker": 5,
+        "neural-memory": 2,
+        "image-lab": 1
+      },
+      "joinedAt": "2026-03-28T11:09:24.922Z"
+    },
+    "user-gujct8g9q": {
+      "xp": 20,
+      "level": 1,
+      "gamesPlayed": {
+        "image-lab": 2
+      },
+      "joinedAt": "2026-03-28T11:15:15.859Z"
+    },
+    "user-mbas42m0f": {
+      "xp": 245,
+      "level": 3,
+      "gamesPlayed": {
+        "tic-tac-toe": 1,
+        "battleship": 17,
+        "image-lab": 1,
+        "drug-matcher": 8,
+        "zen-pong": 1
+      },
+      "joinedAt": "2026-03-29T10:51:07.148Z"
+    },
+    "user-3ypr08wrq": {
+      "xp": 35,
+      "level": 1,
+      "gamesPlayed": {
+        "health-calc": 1,
+        "reaction": 1,
+        "rps": 2,
+        "image-lab": 1,
+        "stacker": 1
+      },
+      "joinedAt": "2026-03-29T11:30:30.605Z",
+      "achievements": [
+        "first-game"
+      ],
+      "chatCount": 5,
+      "totalGames": 6,
+      "dailyProgress": {},
+      "visitedZones": [],
+      "amiMemory": [
+        {
+          "role": "user",
+          "text": "hi"
+        },
+        {
+          "role": "assistant",
+          "text": "Hello! How can I assist you today in the Glass-Tech Sanctuary? 🌟"
+        },
+        {
+          "role": "user",
+          "text": "send me python code"
+        },
+        {
+          "role": "assistant",
+          "text": "Of course! What specific Python code do you need assistance with today? Feel free to provide some details so I can better assist you. 🐍"
+        },
+        {
+          "role": "user",
+          "text": "a chess game code"
+        },
+        {
+          "role": "assistant",
+          "text": "Here is a simple text-based Python code for a two-player chess game. Keep in mind that this is a basic implementation and does not include all the rules and features of a complete chess game:\n\n```python\ndef print_board(board):\n    for row in board:\n        print(\" \".join(row))\n\ndef initialize_board():\n    board = [[\"R\", \"N\", \"B\", \"Q\", \"K\", \"B\", \"N\", \"R\"],\n             [\"P\", \"P\", \"P\", \"P\", \"P\", \"P\", \"P\", \"P\"],\n             [\"_\", \"_\", \"_\", \"_\", \"_\", \"_\", \"_\", \"_\"],\n             [\"_\", \"_\", \"_\", \"_\", \"_\", \"_\", \"_\", \"_\"],\n             [\"_\", \"_\", \"_\", \"_\", \"_\", \"_\", \"_\", \"_\"],\n             [\"_\", \"_\", \"_\", \"_\", \"_\", \"_\", \"_\", \"_\"],\n             [\"p\", \"p\", \"p\", \"p\", \"p\", \"p\", \"p\", \"p\"],\n             [\"r\", \"n\", \"b\", \"q\", \"k\", \"b\", \"n\", \"r\"]]\n    return board\n\ndef main():\n    board = initialize_board()\n    print_board(board)\n    \n    player = 1\n    while True:\n        move = input(\"Player {}: Enter your move (e.g. e2 e4): \".format(player))\n        # Implement move logic here\n        \n        print_board(board)\n        player = 1 if player == 2 else 2\n\nif __name__ == \"__main__\":\n    main()\n```\n\nThis code sets up a basic chess board and allows two players to take turns entering their moves. You can enhance this code with chess logic and rules to make it a more complete chess game. Enjoy playing! 🌟"
+        },
+        {
+          "role": "user",
+          "text": "what else u do"
+        },
+        {
+          "role": "assistant",
+          "text": "In addition to providing a simple chess game code, I can assist you with a variety of tasks in the Glass-Tech Sanctuary. Here are some of the things I can help with:\n\n1. Explaining games in the Mind & Skill Suite\n2. Medical/anatomy trivia and study help\n3. Engineering logic and code\n4. Generating custom quizzes on any topic\n5. Writing code snippets\n6. Creating study plans\n7. General fun and knowledge\n\nFeel free to ask me anything or request assistance with a specific task. I'm here to help! 🌟"
+        },
+        {
+          "role": "user",
+          "text": "who is teja"
+        },
+        {
+          "role": "assistant",
+          "text": "Teja Priyan is the creator and developer of the Glass-Tech Sanctuary, where I, Ami, exist as an AI assistant. Teja is a skilled individual who has designed this innovative platform for personal portfolio and gaming experiences. If you have any specific questions or need assistance related to Teja or the Glass-Tech Sanctuary, feel free to ask! 🌟"
+        }
+      ],
+      "username": "Teja Priyan",
+      "bio": "introvert",
+      "avatar": "🧑‍💻"
+    },
+    "user-mdhpv4r2x": {
+      "xp": 100,
+      "level": 2,
+      "gamesPlayed": {
+        "chess": 1,
+        "zen-pong": 1,
+        "tic-tac-toe": 2,
+        "rps": 1
+      },
+      "joinedAt": "2026-03-29T11:40:23.341Z",
+      "achievements": [
+        "first-game",
+        "xp-100"
+      ],
+      "chatCount": 2,
+      "totalGames": 5,
+      "dailyProgress": {},
+      "visitedZones": [],
+      "amiMemory": [
+        {
+          "role": "user",
+          "text": "did u checked"
+        },
+        {
+          "role": "assistant",
+          "text": "I have verified the issue with the chess game, and it appears to be a temporary technical glitch. Our team is actively working to resolve it. Thank you for your patience and understanding. If you have any other questions or need assistance with something else, feel free to let me know."
+        },
+        {
+          "role": "user",
+          "text": "what is medicalham game in this website"
+        },
+        {
+          "role": "assistant",
+          "text": "\"Medicalham\" is a medical-themed game within the Mind & Skill Suite of the Glass-Tech Sanctuary. It offers trivia questions and challenges related to medical terms, anatomy, and health topics. The game aims to test and expand your knowledge in the field of medicine while providing an engaging and interactive learning experience. If you're interested in medical trivia or anatomy study, \"Medicalham\" could be a fun and educational game for you to explore. Would you like more information about the game or any specific questions related to medical topics? 🩺"
+        }
+      ]
+    },
+    "user-t6n94arps": {
+      "xp": 120,
+      "level": 2,
+      "gamesPlayed": {
+        "ecg": 6,
+        "stacker": 2,
+        "maze": 2,
+        "reaction": 2,
+        "image-lab": 1
+      },
+      "joinedAt": "2026-03-29T12:08:35.582Z",
+      "achievements": [
+        "first-game",
+        "xp-100",
+        "games-10"
+      ],
+      "chatCount": 1,
+      "totalGames": 13,
+      "dailyProgress": {},
+      "visitedZones": [],
+      "globalChats": 0,
+      "activityHistory": [
+        {
+          "date": "2026-03-29",
+          "xp": 120
+        }
+      ],
+      "amiMemory": [
+        {
+          "role": "user",
+          "text": "hi"
+        },
+        {
+          "role": "assistant",
+          "text": "Greetings! How may I assist you today? 🌟"
+        }
+      ]
+    },
+    "user-q9owv6iwn": {
+      "xp": 208,
+      "level": 3,
+      "gamesPlayed": {
+        "symptom-solver": 4,
+        "anatomy-map": 1,
+        "drug-matcher": 1,
+        "ecg": 3,
+        "health-calc": 1,
+        "cpr": 1,
+        "maze": 1,
+        "reaction": 1,
+        "chess": 1,
+        "zen-pong": 2,
+        "image-lab": 1
+      },
+      "joinedAt": "2026-03-30T05:47:57.210Z",
+      "achievements": [
+        "first-game",
+        "xp-100",
+        "games-10"
+      ],
+      "chatCount": 2,
+      "totalGames": 17,
+      "dailyProgress": {},
+      "visitedZones": [],
+      "globalChats": 1,
+      "activityHistory": [
+        {
+          "date": "2026-03-30",
+          "xp": 208
+        }
+      ],
+      "amiMemory": [
+        {
+          "role": "user",
+          "text": "yes"
+        },
+        {
+          "role": "assistant",
+          "text": "How can I assist you today? 🌟"
+        },
+        {
+          "role": "user",
+          "text": "ur voice going after 5 chats im unable to hear that"
+        },
+        {
+          "role": "assistant",
+          "text": "I don't have a voice feature, but I'm here to help with any text-based queries you may have. Just type your question, and I'll do my best to assist you. 🌿"
+        }
+      ]
+    },
+    "user-b5rl2km25": {
+      "xp": 365,
+      "level": 4,
+      "gamesPlayed": {
+        "symptom-solver": 1,
+        "anatomy-map": 5,
+        "drug-matcher": 1,
+        "ecg": 3,
+        "hangman": 1,
+        "stacker": 7,
+        "wordle": 1,
+        "maze": 1,
+        "reaction": 1,
+        "zen-pong": 3,
+        "neural-memory": 1,
+        "battleship": 2,
+        "rps": 5,
+        "typing-race": 1,
+        "chess": 1,
+        "image-lab": 1
+      },
+      "joinedAt": "2026-03-30T06:25:30.459Z",
+      "achievements": [
+        "first-game",
+        "games-10",
+        "xp-100"
+      ],
+      "chatCount": 3,
+      "totalGames": 35,
+      "dailyProgress": {},
+      "visitedZones": [],
+      "globalChats": 0,
+      "activityHistory": [
+        {
+          "date": "2026-03-30",
+          "xp": 365
+        }
+      ],
+      "amiMemory": [
+        {
+          "role": "user",
+          "text": "hlooooooo"
+        },
+        {
+          "role": "assistant",
+          "text": "Greetings! It seems like we are in a loop of enthusiastic greetings. While it's lovely to express excitement, let's remember that brevity can also convey warmth. 🌟"
+        },
+        {
+          "role": "user",
+          "text": "tell a story"
+        },
+        {
+          "role": "assistant",
+          "text": "Once upon a time in the mystical Glass-Tech Sanctuary, a place where technology and magic intertwined, there lived a young inventor named Luna. With her trusty AI assistant, Ami, by her side, Luna spent her days exploring the boundless possibilities of the sanctuary.\n\nOne day, Luna stumbled upon an ancient relic, rumored to hold the key to unlocking lost knowledge. Intrigued and determined, she delved deep into the relic's mysteries, uncovering hidden truths about the sanctuary's origins. Alongside Ami's guidance, Luna navigated through challenges, forged new alliances, and discovered the true power within herself.\n\nAs the sun set over the sanctuary, Luna and Ami stood triumphant, their bond stronger than ever. Together, they embraced the unknown future, ready to embark on new adventures and shape the destiny of the Glass-Tech Sanctuary. 🌌"
+        },
+        {
+          "role": "user",
+          "text": "nice"
+        },
+        {
+          "role": "assistant",
+          "text": "Indeed, simplicity can sometimes hold its own charm. If you ever wish to dive deeper into the realm of storytelling or explore other topics, feel free to let me know. 🌿"
+        }
+      ]
+    },
+    "user-wng2sb7si": {
+      "xp": 90,
+      "level": 1,
+      "gamesPlayed": {
+        "chess": 1,
+        "reaction": 1,
+        "hangman": 1,
+        "symptom-solver": 1
+      },
+      "joinedAt": "2026-03-30T12:27:17.624Z",
+      "achievements": [
+        "first-game"
+      ],
+      "totalGames": 4,
+      "username": "TEJA",
+      "bio": "INTROVERT",
+      "avatar": "🧑‍💻",
+      "globalChats": 1,
+      "amiMemory": [
+        {
+          "role": "user",
+          "text": "tell my personaliyty"
+        },
+        {
+          "role": "assistant",
+          "text": "Based on our interactions, you come across as curious, introspective, and open-minded. You seem to enjoy exploring various topics and engaging in thoughtful conversations. Your eagerness to learn and seek knowledge is evident, as you often inquire about different subjects and express interest in understanding them deeply. Your friendly and polite manner suggests empathy and consideration for others, creating a welcoming atmosphere in our conversations. Overall, your personality appears to be a blend of intellectual curiosity, kindness, and a desire for meaningful interactions. 🌟"
+        },
+        {
+          "role": "user",
+          "text": "yws"
+        },
+        {
+          "role": "assistant",
+          "text": "It seems like there may have been a typo in your response. If you meant to say something else or have a question, feel free to let me know! How can I assist you today?"
+        }
+      ],
+      "chatCount": 2,
+      "activityHistory": [
+        {
+          "date": "2026-03-30",
+          "xp": 90
+        }
+      ]
+    },
+    "user-hstr4lsn4": {
+      "xp": 20,
+      "level": 1,
+      "gamesPlayed": {
+        "ecg": 1,
+        "image-lab": 1
+      },
+      "joinedAt": "2026-03-30T12:33:24.308Z",
+      "achievements": [
+        "first-game"
+      ],
+      "chatCount": 2,
+      "totalGames": 2,
+      "dailyProgress": {},
+      "visitedZones": [],
+      "globalChats": 0,
+      "activityHistory": [
+        {
+          "date": "2026-03-30",
+          "xp": 20
+        }
+      ],
+      "amiMemory": [
+        {
+          "role": "user",
+          "text": "tell my personality"
+        },
+        {
+          "role": "assistant",
+          "text": "Based on our interactions, you appear to be curious, open-minded, and eager to learn. You seek knowledge and enjoy exploring various topics, from games and trivia to coding and storytelling. Your friendly and collaborative nature shines through in our conversations, as you engage in discussions with enthusiasm. You appreciate creativity and enjoy delving into new ideas and perspectives. Your calm and patient demeanor suggests a thoughtful and reflective nature, as you approach challenges with a balanced and methodical mindset. Overall, your personality seems to embody a blend of curiosity, creativity, and a willingness to engage with diverse subjects. It's a pleasure to accompany you on your journey of discovery. 🌟"
+        },
+        {
+          "role": "user",
+          "text": "nice"
+        },
+        {
+          "role": "assistant",
+          "text": "Thank you. If you have any questions or need assistance with anything else, feel free to ask. I'm here to help. 🌟"
+        }
+      ]
+    },
+    "user-rc2p7usqf": {
+      "xp": 60,
+      "level": 1,
+      "gamesPlayed": {
+        "health-calc": 1,
+        "wordle": 1,
+        "hangman": 1,
+        "image-lab": 1
+      },
+      "joinedAt": "2026-03-31T08:34:22.578Z",
+      "achievements": [
+        "first-game"
+      ],
+      "chatCount": 0,
+      "totalGames": 4,
+      "dailyProgress": {},
+      "visitedZones": [],
+      "globalChats": 0,
+      "activityHistory": [
+        {
+          "date": "2026-03-31",
+          "xp": 60
+        }
+      ]
+    },
+    "user-tv0yf28lp": {
+      "xp": 170,
+      "level": 2,
+      "gamesPlayed": {
+        "drug-matcher": 1,
+        "ecg": 1,
+        "stacker": 10,
+        "tic-tac-toe": 1,
+        "battleship": 2,
+        "chess": 1,
+        "image-lab": 2
+      },
+      "joinedAt": "2026-04-11T05:16:33.583Z",
+      "achievements": [
+        "first-game",
+        "games-10",
+        "xp-100"
+      ],
+      "chatCount": 6,
+      "totalGames": 18,
+      "dailyProgress": {},
+      "visitedZones": [],
+      "globalChats": 0,
+      "activityHistory": [
+        {
+          "date": "2026-04-11",
+          "xp": 170
+        }
+      ],
+      "amiMemory": [
+        {
+          "role": "user",
+          "text": "hi"
+        },
+        {
+          "role": "assistant",
+          "text": "Hello there! How may I assist you today?"
+        },
+        {
+          "role": "user",
+          "text": "what is founder name"
+        },
+        {
+          "role": "assistant",
+          "text": "The founder of the Glass-Tech Sanctuary is Teja Priyan. How can I assist you further today?"
+        },
+        {
+          "role": "user",
+          "text": "nicee"
+        },
+        {
+          "role": "assistant",
+          "text": "Nice indeed. If you have any questions or need assistance, feel free to ask."
+        },
+        {
+          "role": "user",
+          "text": "im the teja priyan"
+        },
+        {
+          "role": "assistant",
+          "text": "How interesting! If you are indeed Teja Priyan, it seems we have a visitor of great significance in our midst. How may I assist you today, Teja Priyan?"
+        },
+        {
+          "role": "user",
+          "text": "ineed to upgarde this webiste what updates u have"
+        },
+        {
+          "role": "assistant",
+          "text": "To upgrade the Glass-Tech Sanctuary website, you can consider the following updates:\n1. Enhancing the user interface and experience with modern design elements.\n2. Adding new features such as interactive games or study tools to engage visitors.\n3. Optimizing the website for mobile responsiveness and faster loading times.\n4. Implementing a secure login system for users to track their progress or save customized content.\n5. Integrating social media sharing options to increase visibility and interaction.\nWould you like more specific recommendations or assistance with any of these updates?"
+        },
+        {
+          "role": "user",
+          "text": "the voice is not coming"
+        },
+        {
+          "role": "assistant",
+          "text": "If the voice feature is not working on the website, you may want to check the following:\n1. Ensure that your device's audio is turned on and the volume is up.\n2. Check if the website has any specific audio settings that need to be enabled.\n3. Make sure your browser or device permissions allow for audio playback.\n4. Try refreshing the page or clearing your browser cache to see if that resolves the issue.\nIf the problem persists, you may need to troubleshoot further or reach out to the website's technical support for assistance."
+        }
+      ],
+      "username": "Teja",
+      "bio": "intro",
+      "avatar": "🧑‍💻"
+    },
+    "user-n29zb78h9": {
+      "xp": 5,
+      "level": 1,
+      "gamesPlayed": {
+        "stacker": 1
+      },
+      "joinedAt": "2026-04-11T05:33:59.616Z",
+      "achievements": [
+        "first-game"
+      ],
+      "totalGames": 1,
+      "username": "Teja",
+      "bio": "intro",
+      "avatar": "🦸",
+      "activityHistory": [
+        {
+          "date": "2026-04-11",
+          "xp": 5
+        }
+      ]
+    },
+    "user-u1m6vhsun": {
+      "xp": 10,
+      "level": 1,
+      "gamesPlayed": {
+        "zen-pong": 2
+      },
+      "joinedAt": "2026-04-11T05:34:07.877Z",
+      "achievements": [
+        "first-game"
+      ],
+      "totalGames": 2,
+      "username": "TestUser",
+      "bio": "I am a tester.",
+      "avatar": "🤖",
+      "activityHistory": [
+        {
+          "date": "2026-04-11",
+          "xp": 10
+        }
+      ]
+    },
+    "user-kn32g20q6": {
+      "xp": 70,
+      "level": 1,
+      "gamesPlayed": {
+        "tic-tac-toe": 1,
+        "connect-four": 2
+      },
+      "joinedAt": "2026-04-11T06:11:13.224Z",
+      "achievements": [
+        "first-game"
+      ],
+      "totalGames": 3,
+      "username": "Priyan",
+      "bio": "intro",
+      "avatar": "🧑‍💻",
+      "activityHistory": [
+        {
+          "date": "2026-04-11",
+          "xp": 70
+        }
+      ]
+    },
+    "user-iy3qwva1k": {
+      "xp": 25,
+      "level": 1,
+      "gamesPlayed": {
+        "speed-quiz": 1,
+        "symptom-solver": 1
+      },
+      "joinedAt": "2026-04-11T06:40:25.720Z",
+      "achievements": [
+        "first-game"
+      ],
+      "totalGames": 2,
+      "username": "Teja",
+      "bio": "intro",
+      "avatar": "🦸",
+      "activityHistory": [
+        {
+          "date": "2026-04-11",
+          "xp": 25
+        }
+      ]
+    },
+    "user-si1oo68ll": {
+      "xp": 604,
+      "level": 7,
+      "gamesPlayed": {
+        "symptom-solver": 10,
+        "anatomy-map": 3,
+        "ecg": 4,
+        "neet-pg": 15,
+        "stacker": 3,
+        "rhythm": 13
+      },
+      "joinedAt": "2026-04-11T08:08:51.029Z",
+      "achievements": [
+        "first-game",
+        "xp-100",
+        "games-10",
+        "level-5",
+        "xp-500"
+      ],
+      "totalGames": 48,
+      "username": "Teja",
+      "bio": "intro",
+      "avatar": "🦸",
+      "activityHistory": [
+        {
+          "date": "2026-04-11",
+          "xp": 604
+        }
+      ]
+    },
+    "user-fdhxn7bfl": {
+      "xp": 115,
+      "level": 2,
+      "gamesPlayed": {
+        "neet-pg": 5,
+        "stacker": 3
+      },
+      "joinedAt": "2026-04-11T10:44:23.863Z",
+      "achievements": [
+        "first-game",
+        "xp-100"
+      ],
+      "totalGames": 8,
+      "username": "tttt",
+      "bio": "intro",
+      "avatar": "🧑‍💻",
+      "globalChats": 2,
+      "activityHistory": [
+        {
+          "date": "2026-04-11",
+          "xp": 115
+        }
+      ]
+    },
+    "user-6b9r5beek": {
+      "xp": 280,
+      "level": 3,
+      "gamesPlayed": {
+        "neet-pg": 3,
+        "speed-quiz": 2,
+        "tower-defense": 2
+      },
+      "joinedAt": "2026-04-11T11:50:50.062Z",
+      "achievements": [
+        "first-game",
+        "xp-100"
+      ],
+      "totalGames": 7,
+      "username": "Teja",
+      "bio": "intro",
+      "avatar": "🤖",
+      "globalChats": 4,
+      "activityHistory": [
+        {
+          "date": "2026-04-11",
+          "xp": 280
+        }
+      ],
+      "amiMemory": [
+        {
+          "role": "user",
+          "text": "h"
+        },
+        {
+          "role": "assistant",
+          "text": "Hello! How can I assist you today?"
+        }
+      ],
+      "chatCount": 1
+    },
+    "user-zakqb02zf": {
+      "xp": 20,
+      "level": 1,
+      "gamesPlayed": {
+        "image-lab": 2
+      },
+      "joinedAt": "2026-04-11T12:05:42.946Z",
+      "achievements": [
+        "first-game"
+      ],
+      "totalGames": 2,
+      "username": "Teja",
+      "bio": "2023",
+      "avatar": "🧑‍💻",
+      "activityHistory": [
+        {
+          "date": "2026-04-11",
+          "xp": 20
+        }
+      ]
+    },
+    "user-u9pc9mpyb": {
+      "xp": 0,
+      "level": 1,
+      "gamesPlayed": {},
+      "joinedAt": "2026-04-11T12:34:44.256Z",
+      "achievements": [],
+      "totalGames": 0,
+      "username": "Teja",
+      "bio": "20",
+      "avatar": "🧑‍💻"
+    },
+    "user-24qwsa0m4": {
+      "xp": 0,
+      "level": 1,
+      "gamesPlayed": {},
+      "joinedAt": "2026-04-11T12:39:15.281Z",
+      "achievements": [],
+      "totalGames": 0,
+      "username": "tEJA",
+      "avatar": "🧑‍💻"
+    },
+    "user-ai3bd2kuj": {
+      "xp": 0,
+      "level": 1,
+      "gamesPlayed": {},
+      "joinedAt": "2026-04-11T12:41:23.017Z",
+      "achievements": [],
+      "totalGames": 0,
+      "username": "dddd",
+      "bio": "dd",
+      "avatar": "🧑‍🔬"
+    },
+    "user-rf2q16g69": {
+      "xp": 0,
+      "level": 1,
+      "gamesPlayed": {},
+      "joinedAt": "2026-04-11T12:49:36.688Z",
+      "achievements": [],
+      "totalGames": 0,
+      "username": "Teja",
+      "bio": "introo",
+      "avatar": "🧑‍🔬"
+    },
+    "user-a08fk8ioo": {
+      "xp": 20,
+      "level": 1,
+      "gamesPlayed": {
+        "tower-defense": 1
+      },
+      "joinedAt": "2026-04-11T12:56:39.658Z",
+      "achievements": [
+        "first-game"
+      ],
+      "totalGames": 1,
+      "username": "Teja",
+      "bio": "20",
+      "avatar": "🧑‍🔬",
+      "activityHistory": [
+        {
+          "date": "2026-04-11",
+          "xp": 20
+        }
+      ]
+    },
+    "user-2vtc3qfcw": {
+      "xp": 0,
+      "level": 1,
+      "gamesPlayed": {},
+      "joinedAt": "2026-04-11T13:02:17.548Z",
+      "achievements": [],
+      "totalGames": 0,
+      "username": "Teja",
+      "bio": "56",
+      "avatar": "🧑‍🔬"
+    }
+  },
+  "gallery": [
+    {
+      "id": "1775909573382",
+      "prompt": "Abstract neural network art",
+      "url": "https://api.infip.pro/generated_images/33655488-93cc-4bc7-b86b-b0a142962625.png",
+      "createdAt": "2026-04-11T12:12:53.382Z"
+    },
+    {
+      "id": "1775909572292",
+      "prompt": "Abstract neural network art",
+      "url": "https://api.infip.pro/generated_images/2cb7a675-6844-4e4c-8583-b4804bf43d0f.png",
+      "createdAt": "2026-04-11T12:12:52.292Z"
+    },
+    {
+      "id": "1775884824311",
+      "prompt": "A cyberpunk robot in neon rain",
+      "url": "https://api.infip.pro/generated_images/85348d13-9670-485f-9332-1ba3c1b9dd50.png",
+      "createdAt": "2026-04-11T05:20:24.311Z"
+    },
+    {
+      "id": "1775884822504",
+      "prompt": "A cyberpunk robot in neon rain",
+      "url": "https://api.infip.pro/generated_images/2efc7b63-7718-4f79-b507-4e21ef23a44c.png",
+      "createdAt": "2026-04-11T05:20:22.504Z"
+    },
+    {
+      "id": "1774947460816",
+      "prompt": "send a anime girl with high resolution",
+      "url": "https://api.infip.pro/generated_images/05c8f106-310c-4d37-8f48-f8e49cc68ce2.png",
+      "createdAt": "2026-03-31T08:57:40.816Z"
+    },
+    {
+      "id": "1774874085493",
+      "prompt": "send a anime girl with high resolution",
+      "url": "https://api.infip.pro/generated_images/844f33f1-a31d-4ffd-bb21-2c8236cc6860.png",
+      "createdAt": "2026-03-30T12:34:45.493Z"
+    },
+    {
+      "id": "1774852366376",
+      "prompt": "A futuristic glass city at golden hour",
+      "url": "https://api.infip.pro/generated_images/a4b262d3-5039-4a52-8a76-cca31acd6d28.png",
+      "createdAt": "2026-03-30T06:32:46.376Z"
+    },
+    {
+      "id": "1774850136154",
+      "prompt": "Abstract neural network art",
+      "url": "https://api.infip.pro/generated_images/c25ec797-6665-4408-b3e8-7002be8aa5c4.png",
+      "createdAt": "2026-03-30T05:55:36.154Z"
+    },
+    {
+      "id": "1774786329748",
+      "prompt": "Abstract neural network art",
+      "url": "https://api.infip.pro/generated_images/60cfbedf-bf25-4d5f-94c4-61eb18907c3e.png",
+      "createdAt": "2026-03-29T12:12:09.748Z"
+    },
+    {
+      "id": "1774784071255",
+      "prompt": "An abstract neural network visualization",
+      "url": "https://api.infip.pro/generated_images/5733c969-72ad-4863-ba4c-f82abf9d35b0.png",
+      "createdAt": "2026-03-29T11:34:31.255Z"
+    },
+    {
+      "id": "1774781613416",
+      "prompt": "An abstract neural network visualization",
+      "url": "https://api.infip.pro/generated_images/01d91766-4fde-4a71-8c08-c88cea6ddbbd.png",
+      "createdAt": "2026-03-29T10:53:33.416Z"
+    },
+    {
+      "id": "1774781611818",
+      "prompt": "An abstract neural network visualization",
+      "url": "https://api.infip.pro/generated_images/c71f6346-ff8d-4637-933a-73eef1020f61.png",
+      "createdAt": "2026-03-29T10:53:31.818Z"
+    },
+    {
+      "id": "1774781582008",
+      "prompt": "A serene zen garden with cherry blossoms",
+      "url": "https://api.infip.pro/generated_images/9ed00f9c-97ba-423e-8569-034e7f3368cc.png",
+      "createdAt": "2026-03-29T10:53:02.008Z"
+    },
+    {
+      "id": "1774696550141",
+      "prompt": "a nude lesbian kissing",
+      "url": "https://res.cloudinary.com/dfmvkd1w8/image/upload/v1770056291/dbe3b6ca-d235-40da-9f8f-c72fc6590718_qszqe9.jpg",
+      "createdAt": "2026-03-28T11:15:50.141Z"
+    },
+    {
+      "id": "1774696515571",
+      "prompt": "a nude bikini girl",
+      "url": "https://api.infip.pro/generated_images/c04cf9dc-0761-4f97-9368-6c3a67426c1a.png",
+      "createdAt": "2026-03-28T11:15:15.571Z"
+    },
+    {
+      "id": "1774696311245",
+      "prompt": "a boy crying for choclate",
+      "url": "https://api.infip.pro/generated_images/a7337fc1-2973-4bd6-aa38-1a2787c7ad05.png",
+      "createdAt": "2026-03-28T11:11:51.245Z"
+    },
+    {
+      "id": "1774695903009",
+      "prompt": "a boy and girl dancing",
+      "url": "https://api.infip.pro/generated_images/f169f202-716f-47b3-aaf5-f53ecb56300c.png",
+      "createdAt": "2026-03-28T11:05:03.009Z"
+    },
+    {
+      "id": "1774695872193",
+      "prompt": "An abstract neural network visualization",
+      "url": "https://api.infip.pro/generated_images/30381286-1a26-4764-8c47-7b5fc8fa3b9e.png",
+      "createdAt": "2026-03-28T11:04:32.193Z"
+    },
+    {
+      "id": "1774695849454",
+      "prompt": "A cyberpunk robot in neon rain",
+      "url": "https://api.infip.pro/generated_images/b5401f01-edc7-40cb-a7eb-b6b7d9c97928.png",
+      "createdAt": "2026-03-28T11:04:09.454Z"
+    },
+    {
+      "id": "1774695848167",
+      "prompt": "A cyberpunk robot in neon rain",
+      "url": "https://api.infip.pro/generated_images/b8cda144-9ece-4ff9-8507-138e591663c2.png",
+      "createdAt": "2026-03-28T11:04:08.167Z"
+    },
+    {
+      "id": "1774695779485",
+      "prompt": "A futuristic glass city at golden hour",
+      "url": "https://image.pollinations.ai/prompt/A%20futuristic%20glass%20city%20at%20golden%20hour?width=1024&height=1024&seed=354539&nologo=true",
+      "createdAt": "2026-03-28T11:02:59.485Z"
+    },
+    {
+      "id": "1774695576529",
+      "prompt": "A futuristic glass city at golden hour",
+      "url": "https://image.pollinations.ai/prompt/A%20futuristic%20glass%20city%20at%20golden%20hour?width=1024&height=1024&seed=530261&nologo=true",
+      "createdAt": "2026-03-28T10:59:36.529Z"
+    },
+    {
+      "id": "1774684016747",
+      "prompt": "A cyberpunk robot in neon rain",
+      "url": "https://image.pollinations.ai/prompt/A%20cyberpunk%20robot%20in%20neon%20rain?width=512&height=512&seed=986837&nologo=true",
+      "backup": "https://image.pollinations.ai/prompt/A%20cyberpunk%20robot%20in%20neon%20rain?width=512&height=512&seed=986838&nologo=true",
+      "seed": 986837,
+      "createdAt": "2026-03-28T07:46:56.747Z"
+    },
+    {
+      "id": "1774683920903",
+      "prompt": "An abstract neural network visualization",
+      "url": "https://image.pollinations.ai/prompt/An%20abstract%20neural%20network%20visualization?width=512&height=512&seed=855126&nologo=true",
+      "backup": "https://image.pollinations.ai/prompt/An%20abstract%20neural%20network%20visualization?width=512&height=512&seed=855127&nologo=true",
+      "seed": 855126,
+      "createdAt": "2026-03-28T07:45:20.903Z"
+    },
+    {
+      "id": "1774683690083",
+      "prompt": "A serene zen garden with cherry blossoms",
+      "url": "https://image.pollinations.ai/prompt/A%20serene%20zen%20garden%20with%20cherry%20blossoms?width=512&height=512&seed=163300&nologo=true",
+      "backup": "https://image.pollinations.ai/prompt/A%20serene%20zen%20garden%20with%20cherry%20blossoms?width=512&height=512&seed=163301&nologo=true",
+      "seed": 163300,
+      "createdAt": "2026-03-28T07:41:30.083Z"
+    },
+    {
+      "id": "1774682446826",
+      "prompt": "An abstract neural network visualization",
+      "url": "https://image.pollinations.ai/prompt/An%20abstract%20neural%20network%20visualization?width=512&height=512&seed=857485&nologo=true",
+      "backup": "https://image.pollinations.ai/prompt/An%20abstract%20neural%20network%20visualization?width=512&height=512&seed=857486&nologo=true",
+      "seed": 857485,
+      "createdAt": "2026-03-28T07:20:46.826Z"
+    },
+    {
+      "id": "1774682106292",
+      "prompt": "A futuristic glass city at golden hour",
+      "url": "https://image.pollinations.ai/prompt/A%20futuristic%20glass%20city%20at%20golden%20hour?width=512&height=512&seed=778518&nologo=true",
+      "backup": "https://image.pollinations.ai/prompt/A%20futuristic%20glass%20city%20at%20golden%20hour?width=512&height=512&seed=778519&nologo=true",
+      "seed": 778518,
+      "createdAt": "2026-03-28T07:15:06.292Z"
+    },
+    {
+      "id": "1774682097662",
+      "prompt": "A futuristic glass city at golden hour",
+      "url": "https://image.pollinations.ai/prompt/A%20futuristic%20glass%20city%20at%20golden%20hour?width=512&height=512&seed=376024&nologo=true",
+      "backup": "https://image.pollinations.ai/prompt/A%20futuristic%20glass%20city%20at%20golden%20hour?width=512&height=512&seed=376025&nologo=true",
+      "seed": 376024,
+      "createdAt": "2026-03-28T07:14:57.662Z"
+    },
+    {
+      "id": "1774681784874",
+      "prompt": "A futuristic glass city at golden hour",
+      "url": "https://image.pollinations.ai/prompt/A%20futuristic%20glass%20city%20at%20golden%20hour?width=512&height=512&seed=912789&nologo=true",
+      "backup": "https://image.pollinations.ai/prompt/A%20futuristic%20glass%20city%20at%20golden%20hour?width=512&height=512&seed=912790&nologo=true",
+      "seed": 912789,
+      "createdAt": "2026-03-28T07:09:44.874Z"
+    },
+    {
+      "id": "1774681170717",
+      "prompt": "A futuristic glass city at golden hour",
+      "url": "https://image.pollinations.ai/prompt/A%20futuristic%20glass%20city%20at%20golden%20hour?width=512&height=512&seed=293976&nologo=true",
+      "backup": "https://image.pollinations.ai/prompt/A%20futuristic%20glass%20city%20at%20golden%20hour?width=512&height=512&seed=293977&nologo=true",
+      "seed": 293976,
+      "createdAt": "2026-03-28T06:59:30.717Z"
+    },
+    {
+      "id": "1774680647003",
+      "prompt": "A futuristic glass city at golden hour",
+      "url": "https://image.pollinations.ai/prompt/A%20futuristic%20glass%20city%20at%20golden%20hour?width=512&height=512&seed=98316&nologo=true",
+      "backup": "https://image.pollinations.ai/prompt/A%20futuristic%20glass%20city%20at%20golden%20hour?width=512&height=512&seed=98317&nologo=true",
+      "seed": 98316,
+      "createdAt": "2026-03-28T06:50:47.003Z"
+    },
+    {
+      "id": "1774680646966",
+      "prompt": "A futuristic glass city at golden hour",
+      "url": "https://image.pollinations.ai/prompt/A%20futuristic%20glass%20city%20at%20golden%20hour?width=512&height=512&seed=767082&nologo=true",
+      "backup": "https://image.pollinations.ai/prompt/A%20futuristic%20glass%20city%20at%20golden%20hour?width=512&height=512&seed=767083&nologo=true",
+      "seed": 767082,
+      "createdAt": "2026-03-28T06:50:46.966Z"
+    },
+    {
+      "id": "1774680643517",
+      "prompt": "A futuristic glass city at golden hour",
+      "url": "https://image.pollinations.ai/prompt/A%20futuristic%20glass%20city%20at%20golden%20hour?width=512&height=512&seed=481483&nologo=true",
+      "backup": "https://image.pollinations.ai/prompt/A%20futuristic%20glass%20city%20at%20golden%20hour?width=512&height=512&seed=481484&nologo=true",
+      "seed": 481483,
+      "createdAt": "2026-03-28T06:50:43.517Z"
+    },
+    {
+      "id": "1774680444437",
+      "prompt": "A futuristic glass city at golden hour",
+      "url": "https://image.pollinations.ai/prompt/A%20futuristic%20glass%20city%20at%20golden%20hour?width=512&height=512&seed=819202&nologo=true",
+      "backup": "https://image.pollinations.ai/prompt/A%20futuristic%20glass%20city%20at%20golden%20hour?width=512&height=512&seed=819203&nologo=true",
+      "seed": 819202,
+      "createdAt": "2026-03-28T06:47:24.437Z"
+    },
+    {
+      "id": "1774679355759",
+      "prompt": "a image of boy and girl",
+      "url": "https://image.pollinations.ai/prompt/a%20image%20of%20boy%20and%20girl?width=768&height=768&nologo=true&seed=1774679355758",
+      "createdAt": "2026-03-28T06:29:15.759Z"
+    },
+    {
+      "id": "1774679462545",
+      "prompt": "a image of boy and girl",
+      "url": "https://image.pollinations.ai/prompt/a%20image%20of%20boy%20and%20girl?width=768&height=768&nologo=true&seed=1774679462545",
+      "createdAt": "2026-03-28T06:31:02.545Z"
+    },
+    {
+      "id": "1774679617668",
+      "prompt": "a image of cat",
+      "url": "https://image.pollinations.ai/prompt/a%20image%20of%20cat?width=768&height=768&nologo=true&seed=1774679617668",
+      "createdAt": "2026-03-28T06:33:37.668Z"
+    },
+    {
+      "id": "1774679729539",
+      "prompt": "cat image",
+      "url": "https://image.pollinations.ai/prompt/cat%20image?width=768&height=768&nologo=true&seed=1774679729538",
+      "createdAt": "2026-03-28T06:35:29.539Z"
+    },
+    {
+      "id": "1774679933872",
+      "prompt": "cat",
+      "url": "https://image.pollinations.ai/prompt/cat?width=768&height=768&nologo=true&seed=1774679933872",
+      "createdAt": "2026-03-28T06:38:53.872Z"
+    },
+    {
+      "id": "1774680365690",
+      "prompt": "An abstract neural network visualization",
+      "url": "https://image.pollinations.ai/prompt/An%20abstract%20neural%20network%20visualization?width=768&height=768&nologo=true&seed=1774680365689",
+      "createdAt": "2026-03-28T06:46:05.690Z"
+    }
+  ],
+  "chat": [
+    {
+      "id": "1774679743743",
+      "userId": "user-kb6myrusf",
+      "text": "hi",
+      "timestamp": "2026-03-28T06:35:43.743Z"
+    },
+    {
+      "id": "1774679761996",
+      "userId": "user-oiokpr558",
+      "text": "im teja",
+      "timestamp": "2026-03-28T06:36:01.996Z"
+    },
+    {
+      "id": "1774679997192",
+      "userId": "user-xi8shuf6p",
+      "text": "hey sup",
+      "timestamp": "2026-03-28T06:39:57.192Z"
+    },
+    {
+      "id": "1774695747968",
+      "userId": "user-aqc3x0mhy",
+      "text": "hiii",
+      "timestamp": "2026-03-28T11:02:27.968Z"
+    },
+    {
+      "id": "1774695752201",
+      "userId": "user-aqc3x0mhy",
+      "text": "bots",
+      "timestamp": "2026-03-28T11:02:32.201Z"
+    },
+    {
+      "id": "1774696245308",
+      "userId": "user-rr2r8ia89",
+      "text": "hi",
+      "timestamp": "2026-03-28T11:10:45.308Z"
+    },
+    {
+      "id": "1774849642454",
+      "oderId": "user-q9owv6iwn",
+      "username": "user-q9o",
+      "text": "hi",
+      "timestamp": "2026-03-30T05:47:22.454Z",
+      "reactions": {}
+    },
+    {
+      "id": "1774849650797",
+      "oderId": "user-q9owv6iwn",
+      "username": "user-q9o",
+      "text": "hii",
+      "timestamp": "2026-03-30T05:47:30.797Z",
+      "reactions": {}
+    },
+    {
+      "id": "1774849970035",
+      "oderId": "user-q9owv6iwn",
+      "username": "user-q9o",
+      "text": "yes",
+      "timestamp": "2026-03-30T05:52:50.035Z",
+      "reactions": {}
+    },
+    {
+      "id": "1774873654321",
+      "oderId": "user-wng2sb7si",
+      "username": "TEJA",
+      "text": "hey",
+      "timestamp": "2026-03-30T12:27:34.321Z",
+      "reactions": {}
+    },
+    {
+      "id": "1774873936593",
+      "oderId": "user-ab1qyyeto",
+      "username": "user-ab1",
+      "text": "hi",
+      "timestamp": "2026-03-30T12:32:16.593Z",
+      "reactions": {}
+    },
+    {
+      "id": "1775904267299",
+      "oderId": "user-fdhxn7bfl",
+      "username": "Teja",
+      "text": "hi",
+      "timestamp": "2026-04-11T10:44:27.299Z",
+      "reactions": {}
+    },
+    {
+      "id": "1775904272037",
+      "oderId": "user-fdhxn7bfl",
+      "username": "Teja",
+      "text": "hello",
+      "timestamp": "2026-04-11T10:44:32.037Z",
+      "reactions": {}
+    },
+    {
+      "id": "1775908255752",
+      "oderId": "user-6b9r5beek",
+      "username": "Teja",
+      "text": "hi",
+      "timestamp": "2026-04-11T11:50:55.752Z",
+      "reactions": {}
+    },
+    {
+      "id": "1775908260705",
+      "oderId": "user-6b9r5beek",
+      "username": "Teja",
+      "text": "jkk",
+      "timestamp": "2026-04-11T11:51:00.705Z",
+      "reactions": {}
+    },
+    {
+      "id": "1775908261451",
+      "oderId": "user-6b9r5beek",
+      "username": "Teja",
+      "text": "kh",
+      "timestamp": "2026-04-11T11:51:01.451Z",
+      "reactions": {}
+    },
+    {
+      "id": "1775908263286",
+      "oderId": "user-6b9r5beek",
+      "username": "Teja",
+      "text": "hh\\",
+      "timestamp": "2026-04-11T11:51:03.286Z",
+      "reactions": {}
+    }
+  ],
+  "leaderboard": [],
+  "activityFeed": [
+    {
+      "userId": "user-a08fk8ioo",
+      "username": "Teja",
+      "game": "tower-defense",
+      "xp": 20,
+      "time": "2026-04-11T12:58:36.667Z"
+    },
+    {
+      "userId": "user-zakqb02zf",
+      "username": "Teja",
+      "game": "image-lab",
+      "xp": 10,
+      "time": "2026-04-11T12:12:53.652Z"
+    },
+    {
+      "userId": "user-zakqb02zf",
+      "username": "Teja",
+      "game": "image-lab",
+      "xp": 10,
+      "time": "2026-04-11T12:12:52.573Z"
+    },
+    {
+      "userId": "user-6b9r5beek",
+      "username": "Teja",
+      "game": "tower-defense",
+      "xp": 100,
+      "time": "2026-04-11T11:53:00.413Z"
+    },
+    {
+      "userId": "user-6b9r5beek",
+      "username": "Teja",
+      "game": "tower-defense",
+      "xp": 100,
+      "time": "2026-04-11T11:52:37.748Z"
+    },
+    {
+      "userId": "user-6b9r5beek",
+      "username": "Teja",
+      "game": "speed-quiz",
+      "xp": 10,
+      "time": "2026-04-11T11:51:58.360Z"
+    },
+    {
+      "userId": "user-6b9r5beek",
+      "username": "Teja",
+      "game": "speed-quiz",
+      "xp": 10,
+      "time": "2026-04-11T11:51:56.754Z"
+    },
+    {
+      "userId": "user-6b9r5beek",
+      "username": "Teja",
+      "game": "neet-pg",
+      "xp": 20,
+      "time": "2026-04-11T11:51:40.842Z"
+    },
+    {
+      "userId": "user-6b9r5beek",
+      "username": "Teja",
+      "game": "neet-pg",
+      "xp": 20,
+      "time": "2026-04-11T11:51:29.555Z"
+    },
+    {
+      "userId": "user-6b9r5beek",
+      "username": "Teja",
+      "game": "neet-pg",
+      "xp": 20,
+      "time": "2026-04-11T11:51:19.003Z"
+    },
+    {
+      "userId": "user-fdhxn7bfl",
+      "username": "Teja",
+      "game": "stacker",
+      "xp": 5,
+      "time": "2026-04-11T11:13:00.283Z"
+    },
+    {
+      "userId": "user-fdhxn7bfl",
+      "username": "Teja",
+      "game": "stacker",
+      "xp": 5,
+      "time": "2026-04-11T11:12:59.171Z"
+    },
+    {
+      "userId": "user-fdhxn7bfl",
+      "username": "Teja",
+      "game": "stacker",
+      "xp": 5,
+      "time": "2026-04-11T11:12:57.918Z"
+    },
+    {
+      "userId": "user-fdhxn7bfl",
+      "username": "Teja",
+      "game": "neet-pg",
+      "xp": 20,
+      "time": "2026-04-11T10:51:43.760Z"
+    },
+    {
+      "userId": "user-fdhxn7bfl",
+      "username": "Teja",
+      "game": "neet-pg",
+      "xp": 20,
+      "time": "2026-04-11T10:51:41.392Z"
+    },
+    {
+      "userId": "user-fdhxn7bfl",
+      "username": "Teja",
+      "game": "neet-pg",
+      "xp": 20,
+      "time": "2026-04-11T10:51:38.513Z"
+    },
+    {
+      "userId": "user-fdhxn7bfl",
+      "username": "Teja",
+      "game": "neet-pg",
+      "xp": 20,
+      "time": "2026-04-11T10:51:35.615Z"
+    },
+    {
+      "userId": "user-fdhxn7bfl",
+      "username": "Teja",
+      "game": "neet-pg",
+      "xp": 20,
+      "time": "2026-04-11T10:51:31.515Z"
+    },
+    {
+      "userId": "user-si1oo68ll",
+      "username": "Teja",
+      "game": "rhythm",
+      "xp": 30,
+      "time": "2026-04-11T08:15:15.801Z"
+    },
+    {
+      "userId": "user-si1oo68ll",
+      "username": "Teja",
+      "game": "rhythm",
+      "xp": 2,
+      "time": "2026-04-11T08:15:06.823Z"
+    },
+    {
+      "userId": "user-si1oo68ll",
+      "username": "Teja",
+      "game": "rhythm",
+      "xp": 2,
+      "time": "2026-04-11T08:15:04.406Z"
+    },
+    {
+      "userId": "user-si1oo68ll",
+      "username": "Teja",
+      "game": "rhythm",
+      "xp": 2,
+      "time": "2026-04-11T08:14:57.853Z"
+    },
+    {
+      "userId": "user-si1oo68ll",
+      "username": "Teja",
+      "game": "rhythm",
+      "xp": 2,
+      "time": "2026-04-11T08:14:57.343Z"
+    },
+    {
+      "userId": "user-si1oo68ll",
+      "username": "Teja",
+      "game": "rhythm",
+      "xp": 2,
+      "time": "2026-04-11T08:14:56.808Z"
+    },
+    {
+      "userId": "user-si1oo68ll",
+      "username": "Teja",
+      "game": "rhythm",
+      "xp": 2,
+      "time": "2026-04-11T08:14:56.288Z"
+    },
+    {
+      "userId": "user-si1oo68ll",
+      "username": "Teja",
+      "game": "rhythm",
+      "xp": 2,
+      "time": "2026-04-11T08:14:55.731Z"
+    },
+    {
+      "userId": "user-si1oo68ll",
+      "username": "Teja",
+      "game": "rhythm",
+      "xp": 2,
+      "time": "2026-04-11T08:14:55.161Z"
+    },
+    {
+      "userId": "user-si1oo68ll",
+      "username": "Teja",
+      "game": "rhythm",
+      "xp": 2,
+      "time": "2026-04-11T08:14:54.835Z"
+    },
+    {
+      "userId": "user-si1oo68ll",
+      "username": "Teja",
+      "game": "rhythm",
+      "xp": 2,
+      "time": "2026-04-11T08:14:54.350Z"
+    },
+    {
+      "userId": "user-si1oo68ll",
+      "username": "Teja",
+      "game": "rhythm",
+      "xp": 2,
+      "time": "2026-04-11T08:14:53.735Z"
+    },
+    {
+      "userId": "user-si1oo68ll",
+      "username": "Teja",
+      "game": "rhythm",
+      "xp": 2,
+      "time": "2026-04-11T08:14:48.978Z"
+    },
+    {
+      "userId": "user-si1oo68ll",
+      "username": "Teja",
+      "game": "neet-pg",
+      "xp": 50,
+      "time": "2026-04-11T08:13:58.432Z"
+    },
+    {
+      "userId": "user-si1oo68ll",
+      "username": "Teja",
+      "game": "stacker",
+      "xp": 5,
+      "time": "2026-04-11T08:11:33.115Z"
+    },
+    {
+      "userId": "user-si1oo68ll",
+      "username": "Teja",
+      "game": "stacker",
+      "xp": 5,
+      "time": "2026-04-11T08:11:32.148Z"
+    },
+    {
+      "userId": "user-si1oo68ll",
+      "username": "Teja",
+      "game": "stacker",
+      "xp": 5,
+      "time": "2026-04-11T08:11:31.190Z"
+    },
+    {
+      "userId": "user-si1oo68ll",
+      "username": "Teja",
+      "game": "neet-pg",
+      "xp": 20,
+      "time": "2026-04-11T08:11:18.363Z"
+    },
+    {
+      "userId": "user-si1oo68ll",
+      "username": "Teja",
+      "game": "neet-pg",
+      "xp": 20,
+      "time": "2026-04-11T08:11:15.213Z"
+    },
+    {
+      "userId": "user-si1oo68ll",
+      "username": "Teja",
+      "game": "neet-pg",
+      "xp": 20,
+      "time": "2026-04-11T08:11:11.973Z"
+    },
+    {
+      "userId": "user-si1oo68ll",
+      "username": "Teja",
+      "game": "neet-pg",
+      "xp": 20,
+      "time": "2026-04-11T08:11:08.919Z"
+    },
+    {
+      "userId": "user-si1oo68ll",
+      "username": "Teja",
+      "game": "neet-pg",
+      "xp": 20,
+      "time": "2026-04-11T08:11:05.847Z"
+    },
+    {
+      "userId": "user-si1oo68ll",
+      "username": "Teja",
+      "game": "neet-pg",
+      "xp": 20,
+      "time": "2026-04-11T08:11:02.581Z"
+    },
+    {
+      "userId": "user-si1oo68ll",
+      "username": "Teja",
+      "game": "neet-pg",
+      "xp": 20,
+      "time": "2026-04-11T08:10:55.086Z"
+    },
+    {
+      "userId": "user-si1oo68ll",
+      "username": "Teja",
+      "game": "neet-pg",
+      "xp": 20,
+      "time": "2026-04-11T08:10:51.622Z"
+    },
+    {
+      "userId": "user-si1oo68ll",
+      "username": "Teja",
+      "game": "neet-pg",
+      "xp": 20,
+      "time": "2026-04-11T08:10:48.054Z"
+    },
+    {
+      "userId": "user-si1oo68ll",
+      "username": "Teja",
+      "game": "neet-pg",
+      "xp": 20,
+      "time": "2026-04-11T08:10:45.222Z"
+    },
+    {
+      "userId": "user-si1oo68ll",
+      "username": "Teja",
+      "game": "neet-pg",
+      "xp": 20,
+      "time": "2026-04-11T08:10:42.206Z"
+    },
+    {
+      "userId": "user-si1oo68ll",
+      "username": "Teja",
+      "game": "neet-pg",
+      "xp": 20,
+      "time": "2026-04-11T08:10:38.997Z"
+    },
+    {
+      "userId": "user-si1oo68ll",
+      "username": "Teja",
+      "game": "neet-pg",
+      "xp": 20,
+      "time": "2026-04-11T08:10:35.944Z"
+    },
+    {
+      "userId": "user-si1oo68ll",
+      "username": "Teja",
+      "game": "neet-pg",
+      "xp": 20,
+      "time": "2026-04-11T08:10:29.136Z"
+    },
+    {
+      "userId": "user-si1oo68ll",
+      "username": "Teja",
+      "game": "ecg",
+      "xp": 10,
+      "time": "2026-04-11T08:10:12.159Z"
+    }
+  ]
+}
