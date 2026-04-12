@@ -159,7 +159,7 @@ app.post('/api/chat', async (req, res) => {
 
     const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
       method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${OPENROUTER_API_KEY}` },
-      body: JSON.stringify({ model: 'gpt-3.5-turbo', messages, max_tokens: 700, temperature: mode === 'story' ? 0.9 : mode === 'debate' ? 0.8 : 0.7 })
+      body: JSON.stringify({ model: 'meta-llama/llama-3.1-8b-instruct:free', messages, max_tokens: 700, temperature: mode === 'story' ? 0.9 : mode === 'debate' ? 0.8 : 0.7 })
     });
     if (!response.ok) throw new Error(`API ${response.status}`);
     const data = await response.json();
