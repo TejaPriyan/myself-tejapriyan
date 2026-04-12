@@ -157,13 +157,47 @@ app.post('/api/chat', async (req, res) => {
     if (history?.length) for (const h of history.slice(-8)) messages.push({ role: h.role === 'user' ? 'user' : 'assistant', content: h.text });
     messages.push({ role: 'user', content: message });
 
-    const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
-      method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${OPENROUTER_API_KEY}` },
-      body: JSON.stringify({ model: 'meta-llama/llama-3.1-8b-instruct:free', messages, max_tokens: 700, temperature: mode === 'story' ? 0.9 : mode === 'debate' ? 0.8 : 0.7 })
-    });
-    if (!response.ok) throw new Error(`API ${response.status}`);
-    const data = await response.json();
-    const reply = data.choices?.[0]?.message?.content || '🌿 Let me think...';
+    // Try multiple free models in order — if one is rate-limited, fall to next
+    const FREE_MODELS = [
+      'openai/gpt-oss-20b:free',
+      'google/gemma-3-12b-it:free',
+      'google/gemma-3-4b-it:free',
+      'liquid/lfm-2.5-1.2b-instruct:free',
+      'meta-llama/llama-3.3-70b-instruct:free',
+      'meta-llama/llama-3.2-3b-instruct:free',
+      'nousresearch/hermes-3-llama-3.1-405b:free',
+    ];
+
+    let reply = null;
+    let lastError = '';
+    for (const model of FREE_MODELS) {
+      try {
+        const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${OPENROUTER_API_KEY}`,
+            'HTTP-Referer': 'http://localhost:3000',
+            'X-Title': 'Glass-Tech Sanctuary'
+          },
+          body: JSON.stringify({ model, messages, max_tokens: 700, temperature: mode === 'story' ? 0.9 : mode === 'debate' ? 0.8 : 0.7 })
+        });
+        if (response.status === 429 || response.status === 503) {
+          lastError = `API ${response.status}`;
+          console.log(`[Ami] Model ${model} rate limited, trying next...`);
+          continue; // try next model
+        }
+        if (!response.ok) throw new Error(`API ${response.status}`);
+        const data = await response.json();
+        reply = data.choices?.[0]?.message?.content || null;
+        if (reply) { console.log(`[Ami] Responded using: ${model}`); break; }
+      } catch (e) {
+        lastError = e.message;
+        console.log(`[Ami] Model ${model} failed: ${e.message}`);
+      }
+    }
+
+    if (!reply) throw new Error(lastError || 'All models failed');
 
     if (userId && db.users?.[userId]) {
       if (!db.users[userId].amiMemory) db.users[userId].amiMemory = [];
