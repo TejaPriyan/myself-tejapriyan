@@ -7,6 +7,7 @@
 <meta name="description" content="Glass-Tech Sanctuary 2026 - Ultimate fusion of medicine, engineering, AI and play">
 <meta name="theme-color" content="#8DA399">
 <link rel="manifest" href="/manifest.json">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8817990111687358" crossorigin="anonymous"></script>
 <script src="/socket.io/socket.io.js"></script>
@@ -82,11 +83,18 @@ body{font-family:'Inter',-apple-system,sans-serif;background:var(--cream);color:
 @keyframes pulse-ring-active{0%{opacity:0.8;transform:translate(-50%,-50%) scale(0.9)}50%{opacity:0.3;transform:translate(-50%,-50%) scale(1.3)}100%{opacity:0;transform:translate(-50%,-50%) scale(1.6)}}
 .brand-text h1{font-size:18px;font-weight:800;color:var(--charcoal)}
 .brand-text span{font-size:12px;color:var(--sage);font-weight:600;letter-spacing:2px;text-transform:uppercase}
-.header-nav{display:flex;gap:8px;align-items:center;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.header-nav{display:flex;gap:6px;align-items:center;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}
 .header-nav::-webkit-scrollbar{display:none}
-.nav-btn{padding:8px 16px;border:none;border-radius:50px;background:transparent;color:var(--charcoal-light);font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;transition:var(--transition);white-space:nowrap;position:relative}
+.nav-btn{padding:8px 14px;border:none;border-radius:14px;background:transparent;color:var(--charcoal-light);font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;transition:var(--transition);white-space:nowrap;position:relative;display:flex;flex-direction:column;align-items:center;gap:2px;line-height:1}
+.nav-btn .nav-label{font-size:9px;font-weight:700;letter-spacing:0.5px;text-transform:uppercase;opacity:0.7}
 .nav-btn:hover,.nav-btn.active{background:rgba(141,163,153,0.15);color:var(--sage-dark)}
-.nav-btn.active::after{content:'';position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:20px;height:2px;background:var(--sage);border-radius:1px}
+.nav-btn:hover .nav-label,.nav-btn.active .nav-label{opacity:1}
+.nav-btn.active::after{content:'';position:absolute;bottom:2px;left:50%;transform:translateX(-50%);width:16px;height:2px;background:var(--sage);border-radius:1px}
+/* Hamburger menu */
+.hamburger{display:none;width:36px;height:36px;border:1px solid rgba(141,163,153,0.2);border-radius:10px;background:rgba(255,255,255,0.3);cursor:pointer;flex-direction:column;align-items:center;justify-content:center;gap:4px;transition:var(--transition)}
+.hamburger span{display:block;width:18px;height:2px;background:var(--charcoal);border-radius:1px;transition:var(--transition)}
+.hamburger:hover{border-color:var(--sage)}
+@media(max-width:768px){.hamburger{display:flex}.header-nav{display:none;position:absolute;top:100%;left:0;right:0;background:var(--cream);backdrop-filter:blur(20px);padding:12px 16px;border-bottom:1px solid rgba(141,163,153,0.12);flex-direction:row;flex-wrap:wrap;justify-content:center;gap:8px;box-shadow:0 8px 24px rgba(0,0,0,0.08);z-index:999}.header-nav.show{display:flex}.nav-btn .nav-label{font-size:8px}}
 .header-actions{display:flex;align-items:center;gap:12px}
 .xp-display{display:flex;align-items:center;gap:8px;padding:6px 14px;background:rgba(141,163,153,0.1);border-radius:50px;font-size:12px;font-weight:600}
 .xp-bar-mini{width:60px;height:4px;background:rgba(141,163,153,0.2);border-radius:2px;overflow:hidden}
@@ -399,6 +407,21 @@ body{font-family:'Inter',-apple-system,sans-serif;background:var(--cream);color:
 @keyframes toastIn{from{opacity:0;transform:translateX(40px)}}@keyframes toastOut{to{opacity:0;transform:translateX(40px)}}
 .toast.xp{border-left:4px solid var(--sage)}.toast.info{border-left:4px solid #3498DB}.toast.success{border-left:4px solid #6BCB77}.toast.achievement{border-left:4px solid #F1C40F}
 
+/* Footer */
+.site-footer{background:var(--glass-bg);backdrop-filter:blur(20px);border-top:1px solid var(--glass-border);padding:36px 24px 24px;margin-top:40px;text-align:center}
+.footer-content{max-width:900px;margin:0 auto}
+.footer-brand{display:flex;align-items:center;gap:10px;justify-content:center;margin-bottom:14px}
+.footer-brand .bio-orb-sm{width:32px;height:32px;border-radius:50%;background:radial-gradient(circle at 35% 35%,var(--sage-light),var(--sage-dark))}
+.footer-brand h3{font-size:16px;font-weight:800;color:var(--charcoal)}
+.footer-links{display:flex;gap:18px;justify-content:center;flex-wrap:wrap;margin-bottom:14px}
+.footer-links a{color:var(--sage-dark);font-size:13px;font-weight:600;text-decoration:none;transition:var(--transition);display:flex;align-items:center;gap:4px}
+.footer-links a:hover{color:var(--sage);transform:translateY(-1px)}
+.footer-divider{width:60px;height:2px;background:linear-gradient(90deg,transparent,var(--sage),transparent);margin:14px auto}
+.footer-copy{font-size:11px;color:var(--charcoal-light);line-height:1.6}
+.footer-copy a{color:var(--sage);text-decoration:none}
+.footer-techs{display:flex;gap:10px;justify-content:center;margin-top:10px;flex-wrap:wrap}
+.footer-tech{font-size:10px;padding:3px 10px;background:rgba(141,163,153,0.08);border-radius:50px;color:var(--charcoal-light);font-weight:600}
+
 /* Floating emoji */
 .floating-emoji{position:fixed;pointer-events:none;font-size:28px;z-index:99997;animation:emojiFloat 2s ease forwards}
 @keyframes emojiFloat{0%{opacity:1;transform:translateY(0) scale(1)}100%{opacity:0;transform:translateY(-120px) scale(1.5)}}
@@ -418,6 +441,8 @@ body{font-family:'Inter',-apple-system,sans-serif;background:var(--cream);color:
   .symptom-options{grid-template-columns:1fr}
   .profile-section{grid-template-columns:1fr}
   .global-chat-panel{width:300px;right:10px;bottom:10px}
+  .site-footer{padding:24px 16px 18px;margin-top:24px}
+  .footer-links{gap:12px}.footer-links a{font-size:12px}
 }
 </style>
 </head>
@@ -531,13 +556,14 @@ body{font-family:'Inter',-apple-system,sans-serif;background:var(--cream);color:
     <div class="bio-orb" id="bioOrb"></div>
     <div class="brand-text"><h1>Myself Teja Priyan</h1><span>Tech Enthusiast</span></div>
   </div>
+  <button class="hamburger" id="hamburgerBtn" onclick="document.querySelector('.header-nav').classList.toggle('show')" aria-label="Menu"><span></span><span></span><span></span></button>
   <nav class="header-nav">
-    <button class="nav-btn active" data-zone="home">🏠</button>
-    <button class="nav-btn" data-zone="medical">🩺</button>
-    <button class="nav-btn" data-zone="engineer">⚙️</button>
-    <button class="nav-btn" data-zone="games">🎮</button>
-    <button class="nav-btn" data-zone="ami">🤖</button>
-    <button class="nav-btn" data-zone="board">🏆</button>
+    <button class="nav-btn active" data-zone="home">🏠<span class="nav-label">Home</span></button>
+    <button class="nav-btn" data-zone="medical">🩺<span class="nav-label">Medical</span></button>
+    <button class="nav-btn" data-zone="engineer">⚙️<span class="nav-label">Engineer</span></button>
+    <button class="nav-btn" data-zone="games">🎮<span class="nav-label">Games</span></button>
+    <button class="nav-btn" data-zone="ami">🤖<span class="nav-label">Ami AI</span></button>
+    <button class="nav-btn" data-zone="board">🏆<span class="nav-label">Board</span></button>
   </nav>
   <div class="header-actions">
     <div class="online-badge" id="onlineCount"><span class="online-dot"></span><span id="onlineNum">0</span></div>
@@ -727,6 +753,28 @@ body{font-family:'Inter',-apple-system,sans-serif;background:var(--cream);color:
 </section>
 </main>
 
+<!-- FOOTER -->
+<footer class="site-footer">
+  <div class="footer-content">
+    <div class="footer-brand">
+      <div class="bio-orb-sm"></div>
+      <h3>Glass-Tech Sanctuary</h3>
+    </div>
+    <div class="footer-links">
+      <a href="#" onclick="navigateTo('home');return false;">🏠 Home</a>
+      <a href="#" onclick="navigateTo('medical');return false;">🩺 Medical</a>
+      <a href="#" onclick="navigateTo('engineer');return false;">⚙️ Engineer</a>
+      <a href="#" onclick="navigateTo('games');return false;">🎮 Games</a>
+      <a href="#" onclick="navigateTo('ami');return false;">🤖 Ami AI</a>
+      <a href="#" onclick="navigateTo('board');return false;">🏆 Board</a>
+    </div>
+    <div class="footer-divider"></div>
+    <p class="footer-copy">
+      © 2026 <strong>Myself Teja Priyan</strong> — Tech Enthusiast
+    </p>
+  </div>
+</footer>
+
 <script>
 // ============================================================
 // CORE ENGINE — Glass-Tech 2026 (FULLY FIXED)
@@ -743,7 +791,7 @@ const Particles=(()=>{const cv=document.getElementById('particleCanvas');const c
 // ── NAVIGATION ──
 document.querySelectorAll('.nav-btn').forEach(b=>b.addEventListener('click',()=>navigateTo(b.dataset.zone)));
 document.querySelectorAll('.zone-card[data-goto]').forEach(c=>c.addEventListener('click',()=>navigateTo(c.dataset.goto)));
-function navigateTo(z){document.querySelectorAll('.zone').forEach(el=>el.classList.remove('active'));document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));const zone=document.getElementById('zone-'+z);if(zone){zone.classList.add('active');zone.style.animation='none';zone.offsetHeight;zone.style.animation='zoneEnter 0.5s ease';}document.querySelector(`.nav-btn[data-zone="${z}"]`)?.classList.add('active');if(z==='board'){loadLeaderboard();loadAchievements();loadProfile();drawRadar();drawHeatmap();drawAnalytics();}playSound('click');haptic();}
+function navigateTo(z){document.querySelectorAll('.zone').forEach(el=>el.classList.remove('active'));document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));const zone=document.getElementById('zone-'+z);if(zone){zone.classList.add('active');zone.style.animation='none';zone.offsetHeight;zone.style.animation='zoneEnter 0.5s ease';}document.querySelector(`.nav-btn[data-zone="${z}"]`)?.classList.add('active');document.querySelector('.header-nav')?.classList.remove('show');if(z==='board'){loadLeaderboard();loadAchievements();loadProfile();drawRadar();drawHeatmap();drawAnalytics();}window.scrollTo({top:0,behavior:'smooth'});playSound('click');haptic();}
 
 // ── THEMES ──
 const THEMES=[{id:'',name:'Sage',color:'#8DA399'},{id:'dark',name:'Dark',color:'#1a1a2e'},{id:'ocean',name:'Ocean',color:'#2E86C1'},{id:'sunset',name:'Sunset',color:'#E67E22'},{id:'neon',name:'Neon',color:'#00FF88'},{id:'lavender',name:'Lavender',color:'#8E44AD'},{id:'rose',name:'Rose',color:'#EC4899'},{id:'forest',name:'Forest',color:'#2D6A4F'},{id:'midnight',name:'Midnight',color:'#E94560'},{id:'gold',name:'Gold',color:'#D4A017'}];
@@ -789,7 +837,7 @@ function loadProfile(){fetch('/api/user/'+USER_ID).then(r=>r.json()).then(d=>{us
 function loadAchievements(){fetch('/api/achievements/'+USER_ID).then(r=>r.json()).then(list=>{document.getElementById('achievementGrid').innerHTML=list.map(a=>`<div class="achievement-card ${a.earned?'earned':'locked'}"><div class="achievement-icon">${a.icon}</div><div class="achievement-info"><h4>${a.title}</h4><p>${a.desc}</p></div></div>`).join('');}).catch(()=>{});}
 
 // ── SKILL RADAR ──
-function drawRadar(){const cv=document.getElementById('radarCanvas');if(!cv)return;cv.width=280;cv.height=280;const ctx=cv.getContext('2d');const cx=140,cy=140,r=100;const gp=userProfile.gamesPlayed||{};const cats=[{name:'Medical',val:Math.min(((gp['symptom-solver']||0)+(gp['speed-quiz']||0)+(gp['drug-matcher']||0)+(gp['anatomy-map']||0))*5,100)},{name:'Engineering',val:Math.min(((gp['stacker']||0)+(gp['wordle']||0)+(gp['sudoku']||0))*5,100)},{name:'Gaming',val:Math.min(((gp['zen-pong']||0)+(gp['neural-memory']||0)+(gp['tic-tac-toe']||0)+(gp['connect-four']||0))*3,100)},{name:'Creativity',val:Math.min(((gp['image-lab']||0))*10,100)},{name:'Speed',val:Math.min(((gp['typing-race']||0)+(gp['reaction']||0))*8,100)}];const n=cats.length;const angle=Math.PI*2/n;ctx.strokeStyle='rgba(141,163,153,0.2)';ctx.lineWidth=1;for(let l=1;l<=4;l++){ctx.beginPath();for(let i=0;i<=n;i++){const a=angle*i-Math.PI/2;const lr=r*l/4;ctx.lineTo(cx+lr*Math.cos(a),cy+lr*Math.sin(a));}ctx.closePath();ctx.stroke();}const sage=getComputedStyle(document.documentElement).getPropertyValue('--sage').trim()||'#8DA399';ctx.fillStyle=sage+'33';ctx.strokeStyle=sage;ctx.lineWidth=2;ctx.beginPath();cats.forEach((c,i)=>{const a=angle*i-Math.PI/2;const v=r*c.val/100;const x=cx+v*Math.cos(a),y=cy+v*Math.sin(a);i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);});ctx.closePath();ctx.fill();ctx.stroke();ctx.fillStyle=getComputedStyle(document.documentElement).getPropertyValue('--charcoal').trim()||'#4A4A4A';ctx.font='11px Inter';ctx.textAlign='center';cats.forEach((c,i)=>{const a=angle*i-Math.PI/2;const x=cx+(r+22)*Math.cos(a),y=cy+(r+22)*Math.sin(a);ctx.fillText(c.name,x,y+4);});}
+function drawRadar(){const cv=document.getElementById('radarCanvas');if(!cv)return;cv.width=320;cv.height=320;const ctx=cv.getContext('2d');const cx=160,cy=160,r=110;const gp=userProfile.gamesPlayed||{};const cats=[{name:'Medical',val:Math.min(((gp['symptom-solver']||0)+(gp['speed-quiz']||0)+(gp['drug-matcher']||0)+(gp['anatomy-map']||0))*5,100)},{name:'Engg.',val:Math.min(((gp['stacker']||0)+(gp['wordle']||0)+(gp['sudoku']||0))*5,100)},{name:'Gaming',val:Math.min(((gp['zen-pong']||0)+(gp['neural-memory']||0)+(gp['tic-tac-toe']||0)+(gp['connect-four']||0))*3,100)},{name:'Creative',val:Math.min(((gp['image-lab']||0))*10,100)},{name:'Speed',val:Math.min(((gp['typing-race']||0)+(gp['reaction']||0))*8,100)}];const n=cats.length;const angle=Math.PI*2/n;ctx.strokeStyle='rgba(141,163,153,0.2)';ctx.lineWidth=1;for(let l=1;l<=4;l++){ctx.beginPath();for(let i=0;i<=n;i++){const a=angle*i-Math.PI/2;const lr=r*l/4;ctx.lineTo(cx+lr*Math.cos(a),cy+lr*Math.sin(a));}ctx.closePath();ctx.stroke();}const sage=getComputedStyle(document.documentElement).getPropertyValue('--sage').trim()||'#8DA399';ctx.fillStyle=sage+'33';ctx.strokeStyle=sage;ctx.lineWidth=2;ctx.beginPath();cats.forEach((c,i)=>{const a=angle*i-Math.PI/2;const v=r*c.val/100;const x=cx+v*Math.cos(a),y=cy+v*Math.sin(a);i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);});ctx.closePath();ctx.fill();ctx.stroke();ctx.fillStyle=getComputedStyle(document.documentElement).getPropertyValue('--charcoal').trim()||'#4A4A4A';ctx.font='11px Inter';ctx.textAlign='center';cats.forEach((c,i)=>{const a=angle*i-Math.PI/2;const x=cx+(r+22)*Math.cos(a),y=cy+(r+22)*Math.sin(a);ctx.fillText(c.name,x,y+4);});}
 
 function drawHeatmap(){const h=document.getElementById('heatmap');if(!h)return;h.innerHTML='';const history=userProfile.activityHistory||[];const map={};history.forEach(a=>{map[a.date]=a.xp;});const today=new Date();for(let i=90;i>=0;i--){const d=new Date(today);d.setDate(d.getDate()-i);const key=d.toISOString().split('T')[0];const xp=map[key]||0;const cell=document.createElement('div');cell.className='heatmap-cell';if(xp>0)cell.classList.add(xp>80?'l4':xp>40?'l3':xp>15?'l2':'l1');cell.title=`${key}: ${xp} XP`;h.appendChild(cell);}}
 
@@ -1275,7 +1323,7 @@ const Chess=(()=>{
   function join(){mode='multi';reset();gameActive=false;document.getElementById('chessStatus').textContent='Finding opponent...';socket.emit('chess-join',{userId:USER_ID});}
   socket.on('chess-assigned',d=>{myColor=d.color;document.getElementById('chessStatus').textContent=`You are ${myColor==='white'?'⬜ White':'⬛ Black'}. Waiting...`;});
   socket.on('chess-start',()=>{gameActive=true;board=[...INIT];turn='white';document.getElementById('chessStatus').textContent=myColor==='white'?"Your turn":"Opponent's turn";render();showToast('♟️ Online chess started!','success');});
-  socket.on('chess-move',d=>{if(!gameActive)return;applyRemoteMove(d.from,d.to);});;
+  socket.on('chess-move',d=>{if(!gameActive)return;applyRemoteMove(d.from,d.to);});
   socket.on('chess-opponent-left',()=>{document.getElementById('chessStatus').textContent='Opponent left.';gameActive=false;});
   // Apply remote move without emitting back to server
   function applyRemoteMove(from,to){
@@ -1383,7 +1431,7 @@ const RhythmGame=(()=>{
     const ki=KEYS.indexOf(e.key.toUpperCase());if(ki>=0){e.preventDefault();hit(ki);}
   });
   draw();
-  return{start};
+  return{start,hitLane:hit};
 })();
 
 // TOWER DEFENSE — Fully rewritten with correct movement, timing, and wave logic
@@ -2190,7 +2238,7 @@ const AmiChat=(()=>{
 const ImageLab=(()=>{const input=document.getElementById('imagePromptInput');const display=document.getElementById('generatedImage');const gallery=document.getElementById('galleryGrid');input.addEventListener('keydown',e=>{if(e.key==='Enter')generate();});function generate(){const prompt=input.value.trim();if(!prompt)return;generateFromPrompt(prompt);}function generateFromPrompt(prompt){input.value=prompt;display.innerHTML='<div class="spinner"></div><p style="font-size:12px;color:var(--charcoal-light);margin-top:8px;">Generating...</p>';fetch('/api/generate-image',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({prompt})}).then(r=>r.json()).then(data=>{if(data.url){const img=new Image();img.onload=()=>{display.innerHTML='';display.appendChild(img);showToast('🖼️ Image generated!','success');addXP(10,'image-lab');loadGallery();};img.onerror=()=>{display.innerHTML='<span class="placeholder-txt">⏳ Loading...</span>';setTimeout(()=>{img.src=data.url+'&retry=1';},3000);};img.src=data.url;img.style.cssText='width:100%;height:100%;object-fit:cover;';}}).catch(()=>{display.innerHTML='<span class="placeholder-txt">Failed. Try again? 🌿</span>';});}function loadGallery(){fetch('/api/gallery').then(r=>r.json()).then(items=>{gallery.innerHTML='';items.slice(0,6).forEach(item=>{const d=document.createElement('div');d.className='gallery-thumb';d.innerHTML=`<img src="${item.url}" alt="${item.prompt}" loading="lazy">`;d.title=item.prompt;d.addEventListener('click',()=>{display.innerHTML=`<img src="${item.url}" style="width:100%;height:100%;object-fit:cover;">`;input.value=item.prompt;});gallery.appendChild(d);});}).catch(()=>{});}loadGallery();return{generate,generateFromPrompt};})();
 
 // LEADERBOARD
-function loadLeaderboard(){fetch('/api/leaderboard').then(r=>r.json()).then(data=>{const list=document.getElementById('leaderboardList');if(!data.length){list.innerHTML='<li style="justify-content:center;color:var(--charcoal-light);font-size:12px;">No players yet!</li>';return;}list.innerHTML=data.map((u,i)=>{const rc=i===0?'gold':i===1?'silver':i===2?'bronze':'';const name=u.id===USER_ID?`⭐ ${userProfile.username||'You'}`:u.id.slice(0,12);return`<li><div class="lb-rank ${rc}">${i+1}</div><span class="lb-name">${name}</span><span class="lb-xp">${u.xp} XP (Lv.${u.level})</span></li>`;}).join('');}).catch(()=>{});}
+function loadLeaderboard(){fetch('/api/leaderboard').then(r=>r.json()).then(data=>{const list=document.getElementById('leaderboardList');if(!data.length){list.innerHTML='<li style="justify-content:center;color:var(--charcoal-light);font-size:12px;">No players yet!</li>';return;}list.innerHTML=data.map((u,i)=>{const rc=i===0?'gold':i===1?'silver':i===2?'bronze':'';const name=u.id===USER_ID?`⭐ ${userProfile.username||'You'}`:(u.username||u.id.slice(0,12));return`<li><div class="lb-rank ${rc}">${i+1}</div><span style="font-size:16px;margin-right:4px">${u.avatar||'🧑‍💻'}</span><span class="lb-name">${name}</span><span class="lb-xp">${u.xp} XP (Lv.${u.level})</span></li>`;}).join('');}).catch(()=>{});}
 
 // KEYBOARD SHORTCUTS
 document.addEventListener('keydown', e => {
