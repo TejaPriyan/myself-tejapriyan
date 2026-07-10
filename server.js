@@ -1,33 +1,46 @@
 // ============================================================
-// server.js — Glass-Tech Sanctuary ULTIMATE 2026 Edition
-// Myself Teja Priyan — Tech Enthusiast
+// server.js - Glass-Tech Sanctuary ULTIMATE 2026 Edition
+// Myself Teja Priyan - Tech Enthusiast
 // ============================================================
 require('dotenv').config();
 const express = require('express');
 const http = require('http');
 const { Server } = require('socket.io');
 const path = require('path');
-const fs = require('fs');
+const fs2 = require('fs');
+const compression = require('compression');
+const { generateImageMultiAPI } = require('./image-api-new.js');
 
 const PORT = process.env.PORT || 3000;
 const OPENROUTER_API_KEY = process.env.OPENROUTER_API_KEY;
-const INFIP_API_KEY = process.env.INFIP_API_KEY;
 const DB_PATH = path.join(__dirname, 'database.json');
 
 function loadDB() {
-  try { return JSON.parse(fs.readFileSync(DB_PATH, 'utf8')); }
+  try { return JSON.parse(fs2.readFileSync(DB_PATH, 'utf8')); }
   catch (e) { return { users: {}, gallery: [], chat: [], leaderboard: [], achievements: {}, dailyChallenges: {}, activityFeed: [], tournaments: {} }; }
 }
 function saveDB(db) {
-  try { fs.writeFileSync(DB_PATH, JSON.stringify(db, null, 2)); } catch (e) {}
+  try { fs2.writeFileSync(DB_PATH, JSON.stringify(db, null, 2)); } catch (e) { console.error('[DB] Failed to save database:', e.message); }
 }
-
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server, { cors: { origin: '*' }, pingTimeout: 60000, pingInterval: 25000 });
 
+app.use(compression());
 app.use(express.json({ limit: '5mb' }));
-app.use(express.static(__dirname));
+// Security: Prevent serving sensitive backend files publicly
+const ALLOWED_JSON = ['/manifest.json'];
+app.use((req, res, next) => {
+  const p = req.path.toLowerCase();
+  const ext = path.extname(p);
+  // Block .env files, raw JS backend files, and .json except the whitelist
+  if (p.startsWith('/.git') || p === '/.env') return res.status(403).send('Forbidden');
+  if (ext === '.json' && !ALLOWED_JSON.includes(p)) return res.status(403).send('Forbidden');
+  const blockedJsFiles = ['/server.js', '/image-api-new.js', '/package.json', '/package-lock.json'];
+  if (blockedJsFiles.includes(p)) return res.status(403).send('Forbidden');
+  next();
+});
+app.use(express.static(__dirname, { maxAge: '1d' }));
 
 const AMI_SYSTEM_PROMPT = `You are "Ami", a calm, wise, and friendly AI assistant embedded in the Glass-Tech Sanctuary — a personal portfolio and gaming hub built by Teja Priyan.
 You speak in a warm, concise, and slightly poetic tone. You can help with:
@@ -43,100 +56,95 @@ You speak in a warm, concise, and slightly poetic tone. You can help with:
 - General fun and knowledge
 Keep answers under 200 words unless asked for detail. Use emojis sparingly but tastefully.`;
 
-// ── Daily Challenge System ────────────────────────────────────
+// ── Daily Challenge System ──────────────────────────────────────────────────
 function getDailyChallenge() {
   const challenges = [
-    { id: 'speed-quiz-7', title: '⚡ Speed Demon', desc: 'Score 7+ on Medical Speed Quiz', game: 'speed-quiz', target: 7, xpReward: 50 },
-    { id: 'memory-10', title: '🧠 Sharp Mind', desc: 'Complete Neural Memory in under 10 moves', game: 'neural-memory', target: 10, xpReward: 40 },
-    { id: 'play-3-games', title: '🎮 Game Explorer', desc: 'Play 3 different games today', game: 'any', target: 3, xpReward: 35 },
-    { id: 'stacker-200', title: '🏗️ Sky Builder', desc: 'Reach 200px height in Stacker', game: 'stacker', target: 200, xpReward: 45 },
-    { id: 'drug-match-all', title: '💊 Pharmacist', desc: 'Match all drugs correctly', game: 'drug-matcher', target: 6, xpReward: 40 },
-    { id: 'wordle-win', title: '📝 Word Wizard', desc: 'Win a Wordle game', game: 'wordle', target: 1, xpReward: 35 },
-    { id: 'typing-50wpm', title: '⌨️ Speed Typer', desc: 'Reach 50+ WPM in Typing Race', game: 'typing-race', target: 50, xpReward: 45 },
-    { id: 'maze-3', title: '🏃 Maze Master', desc: 'Complete 3 maze levels', game: 'maze', target: 3, xpReward: 40 },
-    { id: 'reaction-300', title: '⚡ Lightning', desc: 'Get under 300ms reaction time', game: 'reaction', target: 300, xpReward: 40 },
-    { id: 'rhythm-80', title: '🎵 Rhythm King', desc: 'Score 80%+ in Rhythm Game', game: 'rhythm', target: 80, xpReward: 50 },
-    { id: 'ecg-5', title: '💓 ECG Expert', desc: 'Identify 5 ECG rhythms correctly', game: 'ecg', target: 5, xpReward: 45 },
-    { id: 'tower-10', title: '🏰 Defender', desc: 'Survive 10 waves in Tower Defense', game: 'tower-defense', target: 10, xpReward: 50 },
+    { id: 'speed-quiz-7',  title: '⚡ Speed Demon',    desc: 'Score 7+ on Medical Speed Quiz',            game: 'speed-quiz',    target: 7,   xpReward: 50 },
+    { id: 'memory-10',     title: '🧠 Sharp Mind',     desc: 'Complete Neural Memory in under 10 moves',  game: 'neural-memory', target: 10,  xpReward: 40 },
+    { id: 'play-3-games',  title: '🎮 Game Explorer',  desc: 'Play 3 different games today',              game: 'any',           target: 3,   xpReward: 35 },
+    { id: 'stacker-200',   title: '🏗️ Sky Builder',  desc: 'Reach 200px height in Stacker',         game: 'stacker',       target: 200, xpReward: 45 },
+    { id: 'drug-match-all',title: '💊 Pharmacist',    desc: 'Match all drugs correctly',                 game: 'drug-matcher',  target: 6,   xpReward: 40 },
+    { id: 'wordle-win',    title: '📝 Word Wizard',   desc: 'Win a Wordle game',                         game: 'wordle',        target: 1,   xpReward: 35 },
+    { id: 'typing-50wpm',  title: '⌨️ Speed Typer',   desc: 'Reach 50+ WPM in Typing Race',             game: 'typing-race',   target: 50,  xpReward: 45 },
+    { id: 'maze-3',        title: '🏃 Maze Master',   desc: 'Complete 3 maze levels',                   game: 'maze',          target: 3,   xpReward: 40 },
+    { id: 'reaction-300',  title: '⚡ Lightning',          desc: 'Get under 300ms reaction time',             game: 'reaction',      target: 300, xpReward: 40 },
+    { id: 'rhythm-80',     title: '🎵 Rhythm King',   desc: 'Score 80%+ in Rhythm Game',                game: 'rhythm',        target: 80,  xpReward: 50 },
+    { id: 'ecg-5',         title: '💓 ECG Expert',    desc: 'Identify 5 ECG rhythms correctly',         game: 'ecg',           target: 5,   xpReward: 45 },
+    { id: 'tower-10',      title: '🏰 Defender',      desc: 'Survive 10 waves in Tower Defense',        game: 'tower-defense', target: 10,  xpReward: 50 },
   ];
   const dayIndex = Math.floor(Date.now() / 86400000) % challenges.length;
   return challenges[dayIndex];
 }
 
-// ── Achievement Definitions ───────────────────────────────────
 const ACHIEVEMENTS = {
-  'first-game': { title: '🎮 First Steps', desc: 'Play your first game', icon: '🎮' },
-  'xp-100': { title: '⭐ Rising Star', desc: 'Earn 100 XP', icon: '⭐' },
-  'xp-500': { title: '🌟 Shining Bright', desc: 'Earn 500 XP', icon: '🌟' },
-  'xp-1000': { title: '💫 Legendary', desc: 'Earn 1000 XP', icon: '💫' },
-  'level-5': { title: '🏅 Level 5', desc: 'Reach Level 5', icon: '🏅' },
-  'level-10': { title: '🏆 Level 10', desc: 'Reach Level 10', icon: '🏆' },
-  'games-10': { title: '🎯 Dedicated', desc: 'Play 10 games total', icon: '🎯' },
-  'games-50': { title: '🔥 On Fire', desc: 'Play 50 games total', icon: '🔥' },
-  'quiz-master': { title: '🧠 Quiz Master', desc: 'Score 10/10 on Speed Quiz', icon: '🧠' },
-  'memory-master': { title: '🃏 Memory Master', desc: 'Complete memory in under 12 moves', icon: '🃏' },
-  'daily-complete': { title: '📅 Daily Warrior', desc: 'Complete a daily challenge', icon: '📅' },
-  'image-creator': { title: '🎨 Artist', desc: 'Generate 5 images', icon: '🎨' },
-  'chat-10': { title: '💬 Talkative', desc: 'Send 10 messages to Ami', icon: '💬' },
-  'all-zones': { title: '🗺️ Explorer', desc: 'Visit all zones', icon: '🗺️' },
-  'pong-win': { title: '🏓 Pong Champ', desc: 'Win a Pong game', icon: '🏓' },
-  'chess-win': { title: '♟️ Chess Master', desc: 'Win a chess game', icon: '♟️' },
-  'wordle-win': { title: '📝 Wordsmith', desc: 'Complete a Wordle', icon: '📝' },
-  'rhythm-king': { title: '🎵 Rhythm King', desc: 'Score 90%+ in Rhythm Game', icon: '🎵' },
-  'maze-runner': { title: '🏃 Maze Runner', desc: 'Complete 5 maze levels', icon: '🏃' },
-  'ecg-expert': { title: '💓 ECG Expert', desc: 'Identify 10 ECG rhythms', icon: '💓' },
-  'tower-hero': { title: '🏰 Tower Hero', desc: 'Survive 15 waves', icon: '🏰' },
-  'social-butterfly': { title: '🦋 Social Butterfly', desc: 'Send 20 global chat messages', icon: '🦋' },
+  'first-game':       { title: '🎮 First Steps',     desc: 'Play your first game',                  icon: '🎮' },
+  'xp-100':           { title: '⭐ Rising Star',      desc: 'Earn 100 XP',                           icon: '⭐' },
+  'xp-500':           { title: '🌟 Shining Bright',  desc: 'Earn 500 XP',                           icon: '🌟' },
+  'xp-1000':          { title: '💫 Legendary',        desc: 'Earn 1000 XP',                          icon: '💫' },
+  'level-5':          { title: '🏅 Level 5',          desc: 'Reach Level 5',                         icon: '🏅' },
+  'level-10':         { title: '🏆 Level 10',         desc: 'Reach Level 10',                        icon: '🏆' },
+  'games-10':         { title: '🎯 Dedicated',        desc: 'Play 10 games total',                   icon: '🎯' },
+  'games-50':         { title: '🔥 On Fire',          desc: 'Play 50 games total',                   icon: '🔥' },
+  'quiz-master':      { title: '🧠 Quiz Master',      desc: 'Score 10/10 on Speed Quiz',             icon: '🧠' },
+  'memory-master':    { title: '🃏 Memory Master',    desc: 'Complete memory in under 12 moves',     icon: '🃏' },
+  'daily-complete':   { title: '📅 Daily Warrior',    desc: 'Complete a daily challenge',            icon: '📅' },
+  'image-creator':    { title: '🎨 Artist',           desc: 'Generate 5 images',                     icon: '🎨' },
+  'chat-10':          { title: '💬 Talkative',        desc: 'Send 10 messages to Ami',               icon: '💬' },
+  'all-zones':        { title: '🗺️ Explorer',         desc: 'Visit all zones',                       icon: '🗺️' },
+  'pong-win':         { title: '🏓 Pong Champ',       desc: 'Win a Pong game',                       icon: '🏓' },
+  'chess-win':        { title: '♟️ Chess Master',     desc: 'Win a chess game',                      icon: '♟️' },
+  'wordle-win':       { title: '📝 Wordsmith',        desc: 'Complete a Wordle',                     icon: '📝' },
+  'rhythm-king':      { title: '🎵 Rhythm King',      desc: 'Score 90%+ in Rhythm Game',             icon: '🎵' },
+  'maze-runner':      { title: '🏃 Maze Runner',      desc: 'Complete 5 maze levels',                icon: '🏃' },
+  'ecg-expert':       { title: '💓 ECG Expert',       desc: 'Identify 10 ECG rhythms',               icon: '💓' },
+  'tower-hero':       { title: '🏰 Tower Hero',       desc: 'Survive 15 waves',                      icon: '🏰' },
+  'social-butterfly': { title: '🦋 Social Butterfly', desc: 'Send 20 global chat messages',          icon: '🦋' },
 };
 
-// ── API Routes ───────────────────────────────────────────────
+// ── API Routes ────────────────────────────────────────────────
 app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'index.html')));
 
-// ── Image Generation ──────────────────────────────────────────
+// ── Image Generation with Magnific API (Primary) + Pollinations (Fallback) ──
 app.post('/api/generate-image', async (req, res) => {
   const { prompt } = req.body;
   if (!prompt) return res.status(400).json({ error: 'No prompt' });
+  
   try {
-    const cleanPrompt = prompt.trim();
-    let imageUrl = null;
-    if (INFIP_API_KEY && INFIP_API_KEY.trim()) {
-      try {
-        const r = await fetch('https://api.infip.pro/v1/images/generations', {
-          method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${INFIP_API_KEY}` },
-          body: JSON.stringify({ model: 'img3', prompt: cleanPrompt, n: 1, size: '1024x1024', response_format: 'url' })
-        });
-        if (r.ok) {
-          const d = await r.json();
-          if (d.task_id) {
-            let att = 0;
-            while (att < 15 && !imageUrl) {
-              await new Promise(resolve => setTimeout(resolve, 2000));
-              try {
-                const pr = await fetch(`https://api.infip.pro/v1/tasks/${d.task_id}`, { headers: { 'Authorization': `Bearer ${INFIP_API_KEY}` } });
-                if (pr.ok) { const pd = await pr.json(); if (pd.status === 'completed' && pd.data) { imageUrl = pd.data[0]?.url; break; } else if (pd.status === 'failed') break; }
-              } catch (e) {}
-              att++;
-            }
-          } else if (d.data?.length > 0) imageUrl = d.data[0].url;
-        }
-      } catch (e) { console.log('[IMG] INFIP failed:', e.message); }
-    }
+    console.log('[IMG] 🎨 Starting image generation for:', prompt.slice(0, 50) + '...');
+    
+    // Use the multi-API generator (Magnific primary, Cloudflare + Pollinations fallback)
+    const { imageUrl, usedAPI, isBase64 } = await generateImageMultiAPI(prompt);
+    
     if (!imageUrl) {
-      const seed = Math.floor(Math.random() * 999999);
-      imageUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(cleanPrompt)}?width=1024&height=1024&seed=${seed}&nologo=true`;
+      console.error('[IMG] ❌ All APIs failed');
+      return res.status(500).json({ error: 'All image generation APIs failed' });
     }
+    
+    console.log(`[IMG] ✅ Success using: ${usedAPI}`);
+    
+    // Save to gallery
     const db = loadDB();
-    const entry = { id: Date.now().toString(), prompt: cleanPrompt, url: imageUrl, createdAt: new Date().toISOString() };
+    const entry = { 
+      id: Date.now().toString(), 
+      prompt: prompt.trim(), 
+      url: imageUrl,
+      createdAt: new Date().toISOString(),
+      api: usedAPI
+    };
     db.gallery.unshift(entry);
     if (db.gallery.length > 100) db.gallery = db.gallery.slice(0, 100);
     saveDB(db);
-    res.json({ success: true, url: imageUrl, entry });
-  } catch (e) { res.status(500).json({ error: 'Failed' }); }
+    
+    res.json({ success: true, url: imageUrl, usedAPI });
+  } catch (e) {
+    console.error('[IMG] Fatal error:', e.message);
+    res.status(500).json({ error: 'Failed to generate image' });
+  }
 });
 
 app.get('/api/gallery', (req, res) => { res.json((loadDB().gallery || []).slice(0, 20)); });
 
-// ── Chat ─────────────────────────────────────────────────────
+// â”€â”€ Chat â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 app.post('/api/chat', async (req, res) => {
   const { message, history, userId, mode } = req.body;
   if (!message) return res.status(400).json({ error: 'No message' });
@@ -148,8 +156,7 @@ app.post('/api/chat', async (req, res) => {
     if (mode === 'personality') systemPrompt += '\n\nAnalyze the user\'s personality based on their chat history. Be insightful, warm, and psychological.';
 
     const messages = [
-      { role: 'user', content: systemPrompt },
-      { role: 'assistant', content: 'Understood. I am Ami, ready to assist. 🌿' }
+      { role: 'system', content: systemPrompt }
     ];
     const db = loadDB();
     const mem = db.users?.[userId]?.amiMemory || [];
@@ -157,7 +164,7 @@ app.post('/api/chat', async (req, res) => {
     if (history?.length) for (const h of history.slice(-8)) messages.push({ role: h.role === 'user' ? 'user' : 'assistant', content: h.text });
     messages.push({ role: 'user', content: message });
 
-    // Try multiple free models in order — if one is rate-limited, fall to next
+    // Try multiple free models in order â€” if one is rate-limited, fall to next
     const FREE_MODELS = [
       'openai/gpt-oss-20b:free',
       'google/gemma-3-12b-it:free',
@@ -177,7 +184,7 @@ app.post('/api/chat', async (req, res) => {
           headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${OPENROUTER_API_KEY}`,
-            'HTTP-Referer': 'http://localhost:3000',
+            'HTTP-Referer': process.env.RENDER_EXTERNAL_URL || `http://localhost:${PORT}`,
             'X-Title': 'Glass-Tech Sanctuary'
           },
           body: JSON.stringify({ model, messages, max_tokens: 700, temperature: mode === 'story' ? 0.9 : mode === 'debate' ? 0.8 : 0.7 })
@@ -210,11 +217,11 @@ app.post('/api/chat', async (req, res) => {
   } catch (e) {
     console.error('Chat error:', e.message);
     // Fallback response
-    res.json({ reply: "🌿 I'm having a little trouble connecting to my brain right now. But don't worry — I'm still here! Want to play a game or explore the Sanctuary? 🌟" });
+    res.json({ reply: "ðŸŒ¿ I'm having a little trouble connecting to my brain right now. But don't worry â€” I'm still here! Want to play a game or explore the Sanctuary? ðŸŒŸ" });
   }
 });
 
-// ── User XP ───────────────────────────────────────────────────
+// â”€â”€ User XP â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 app.post('/api/user/xp', (req, res) => {
   const { userId, xpGain, game } = req.body;
   if (!userId) return res.status(400).json({ error: 'No userId' });
@@ -267,7 +274,7 @@ app.get('/api/user/:id', (req, res) => {
 app.get('/api/leaderboard', (req, res) => {
   const db = loadDB();
   const sorted = Object.entries(db.users).map(([id, u]) => ({
-    id, xp: u.xp || 0, level: u.level || 1, username: u.username || id.slice(0, 10), avatar: u.avatar || '🧑‍💻',
+    id, xp: u.xp || 0, level: u.level || 1, username: u.username || id.slice(0, 10), avatar: u.avatar || 'ðŸ§‘â€ðŸ’»',
     totalGames: u.totalGames || 0, achievements: (u.achievements || []).length
   })).sort((a, b) => b.xp - a.xp).slice(0, 30);
   res.json(sorted);
@@ -326,8 +333,8 @@ app.post('/api/health/bmi', (req, res) => {
   res.json({ bmi: Math.round(bmi * 10) / 10, category: cat, bmr: Math.round(bmr), dailyWater: Math.round(w * 0.033 * 10) / 10, idealWeightLow: Math.round(18.5 * h * h), idealWeightHigh: Math.round(24.9 * h * h) });
 });
 
-// ── Socket.io ────────────────────────────────────────────────
-const pongRooms = {}, tttRooms = {}, c4Rooms = {}, chessRooms = {};
+// â”€â”€ Socket.io â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+const pongRooms = {}, tttRooms = {}, c4Rooms = {}, chessRooms = {}, rpsRooms = {}, snakeRooms = {}, floodRooms = {};
 let onlineUsers = new Set();
 
 io.on('connection', (socket) => {
@@ -336,9 +343,24 @@ io.on('connection', (socket) => {
 
   socket.on('set-user', (data) => { socket.userId = data.userId; socket.username = data.username; });
 
-  // ── Global Chat ──────────────────────────────────────────
+  // â”€â”€ Game Invite System â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // When a user clicks Online in any game, notify all OTHER connected users
+  socket.on('game-invite', (data) => {
+    // data: { game, gameIcon, gameName, fromUser, fromUsername }
+    // Broadcast to all sockets EXCEPT the sender
+    socket.broadcast.emit('game-invite', {
+      game: data.game,
+      gameIcon: data.gameIcon,
+      gameName: data.gameName,
+      fromUser: data.fromUser,
+      fromUsername: data.fromUsername || 'Someone',
+      socketId: socket.id
+    });
+  });
+
+  // â”€â”€ Global Chat â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   socket.on('global-chat', (data) => {
-    const msg = { id: Date.now().toString(), oderId: data.userId, username: data.username || 'Anon', text: (data.text || '').slice(0, 500), timestamp: new Date().toISOString(), reactions: {} };
+    const msg = { id: Date.now().toString(), userId: data.userId, username: data.username || 'Anon', text: (data.text || '').slice(0, 500), timestamp: new Date().toISOString(), reactions: {} };
     io.emit('global-chat', msg);
     const db = loadDB();
     db.chat.push(msg);
@@ -347,14 +369,14 @@ io.on('connection', (socket) => {
     saveDB(db);
   });
 
-  // ── Chat Reactions ───────────────────────────────────────
+  // â”€â”€ Chat Reactions â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   socket.on('chat-reaction', (data) => { io.emit('chat-reaction', data); });
 
-  // ── Canvas ───────────────────────────────────────────────
+  // â”€â”€ Canvas â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   socket.on('canvas-draw', (data) => socket.broadcast.emit('canvas-draw', data));
   socket.on('canvas-clear', () => io.emit('canvas-clear'));
 
-  // ── Pong ─────────────────────────────────────────────────
+  // â”€â”€ Pong â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   socket.on('pong-join', (data) => {
     let roomId = null;
     for (const [id, room] of Object.entries(pongRooms)) { if (room.players.length < 2 && room.state === 'waiting') { roomId = id; break; } }
@@ -369,7 +391,7 @@ io.on('connection', (socket) => {
   });
   socket.on('pong-paddle', (data) => { const r = pongRooms[socket.pongRoom]; if (r?.players[socket.pongIndex]) r.players[socket.pongIndex].y = data.y; });
 
-  // ── TTT ──────────────────────────────────────────────────
+  // â”€â”€ TTT â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   socket.on('ttt-join', (data) => {
     let roomId = null;
     for (const [id, room] of Object.entries(tttRooms)) { if (room.players.length < 2 && room.state === 'waiting') { roomId = id; break; } }
@@ -383,7 +405,7 @@ io.on('connection', (socket) => {
   });
   socket.on('ttt-move', (data) => { if (socket.tttRoom) socket.to(socket.tttRoom).emit('ttt-move', data); });
 
-  // ── C4 ───────────────────────────────────────────────────
+  // â”€â”€ C4 â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   socket.on('c4-join', (data) => {
     let roomId = null;
     for (const [id, room] of Object.entries(c4Rooms)) { if (room.players.length < 2 && room.state === 'waiting') { roomId = id; break; } }
@@ -397,7 +419,7 @@ io.on('connection', (socket) => {
   });
   socket.on('c4-move', (data) => { if (socket.c4Room) socket.to(socket.c4Room).emit('c4-move', data); });
 
-  // ── Chess ────────────────────────────────────────────────
+  // â”€â”€ Chess â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   socket.on('chess-join', (data) => {
     let roomId = null;
     for (const [id, room] of Object.entries(chessRooms)) { if (room.players.length < 2 && room.state === 'waiting') { roomId = id; break; } }
@@ -411,7 +433,153 @@ io.on('connection', (socket) => {
   });
   socket.on('chess-move', (data) => { if (socket.chessRoom) socket.to(socket.chessRoom).emit('chess-move', data); });
 
-  // ── Disconnect ───────────────────────────────────────────
+  // â”€â”€ RPS (FIXED â€” uses socket.id as key for guaranteed uniqueness) â”€â”€
+  socket.on('rps-join', (data) => {
+    // Clean up any existing room for this socket
+    if (socket.rpsRoom && rpsRooms[socket.rpsRoom]) {
+      const old = rpsRooms[socket.rpsRoom];
+      old.players = old.players.filter(p => p.id !== socket.id);
+      if (old.players.length === 0) delete rpsRooms[socket.rpsRoom];
+    }
+    let roomId = null;
+    for (const [id, room] of Object.entries(rpsRooms)) {
+      if (room.players.length < 2 && room.state === 'waiting') { roomId = id; break; }
+    }
+    if (!roomId) {
+      roomId = 'rps-' + Date.now();
+      rpsRooms[roomId] = { players: [], choices: {}, state: 'waiting' };
+    }
+    const room = rpsRooms[roomId];
+    room.players.push({ id: socket.id, userId: data.userId });
+    socket.join(roomId); socket.rpsRoom = roomId; socket.rpsUserId = data.userId;
+    if (room.players.length === 1) {
+      socket.emit('rps-waiting', { room: roomId });
+    } else {
+      room.state = 'playing';
+      // Send each player their socketId so they can identify their own choice
+      const p0 = room.players[0], p1 = room.players[1];
+      io.to(p0.id).emit('rps-start', { room: roomId, myId: p0.userId, oppId: p1.userId, mySocketId: p0.id });
+      io.to(p1.id).emit('rps-start', { room: roomId, myId: p1.userId, oppId: p0.userId, mySocketId: p1.id });
+    }
+  });
+  socket.on('rps-move', (data) => {
+    const room = rpsRooms[data.room];
+    if (!room || room.state !== 'playing') return;
+    // Use socket.id as key to guarantee uniqueness (fixes the bug where userId could collide)
+    room.choices[socket.id] = data.choice;
+    console.log(`[RPS] ${socket.id} chose ${data.choice} in ${data.room}, total choices: ${Object.keys(room.choices).length}`);
+    // Acknowledge to sender
+    socket.emit('rps-choice-ack', { choice: data.choice });
+    // Both players chose â€” send result with socketId-keyed choices
+    if (Object.keys(room.choices).length === 2) {
+      // Build a result that maps each player's socketId to their choice
+      const result = {};
+      room.players.forEach(p => {
+        result[p.id] = room.choices[p.id];
+      });
+      console.log('[RPS] Both chose, sending result:', JSON.stringify(result));
+      io.to(data.room).emit('rps-result', { choices: result });
+      room.choices = {}; // reset for next round
+    }
+  });
+  socket.on('rps-cancel', () => {
+    if (socket.rpsRoom && rpsRooms[socket.rpsRoom]) {
+      const r = rpsRooms[socket.rpsRoom];
+      r.players = r.players.filter(p => p.id !== socket.id);
+      if (r.players.length === 0) delete rpsRooms[socket.rpsRoom];
+      else io.to(socket.rpsRoom).emit('rps-opponent-left');
+    }
+    socket.rpsRoom = null;
+  });
+
+  // â”€â”€ Snake Battle â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  socket.on('snake-join', (data) => {
+    if (socket.snakeRoom && snakeRooms[socket.snakeRoom]) {
+      const old = snakeRooms[socket.snakeRoom];
+      old.players = old.players.filter(p => p.id !== socket.id);
+      if (old.players.length === 0) delete snakeRooms[socket.snakeRoom];
+    }
+    let roomId = null;
+    for (const [id, room] of Object.entries(snakeRooms)) {
+      if (room.players.length < 2 && room.state === 'waiting') { roomId = id; break; }
+    }
+    if (!roomId) {
+      roomId = 'snake-' + Date.now();
+      snakeRooms[roomId] = { players: [], state: 'waiting' };
+    }
+    const room = snakeRooms[roomId];
+    const playerIndex = room.players.length;
+    room.players.push({ id: socket.id, userId: data.userId, index: playerIndex });
+    socket.join(roomId); socket.snakeRoom = roomId; socket.snakeIndex = playerIndex;
+    socket.emit('snake-assigned', { index: playerIndex, room: roomId });
+    if (room.players.length === 1) {
+      socket.emit('snake-waiting');
+    } else {
+      room.state = 'playing';
+      io.to(roomId).emit('snake-start', { room: roomId });
+    }
+  });
+  socket.on('snake-state', (data) => {
+    if (socket.snakeRoom) socket.to(socket.snakeRoom).emit('snake-state', data);
+  });
+  socket.on('snake-died', (data) => {
+    if (socket.snakeRoom) io.to(socket.snakeRoom).emit('snake-died', { ...data, loser: socket.snakeIndex });
+  });
+
+  // ──────────────────────────────────────────────────────────────────────────────
+  socket.on('flood-join', (data) => {
+    if (socket.floodRoom && floodRooms[socket.floodRoom]) {
+      const old = floodRooms[socket.floodRoom];
+      old.players = old.players.filter(p => p.id !== socket.id);
+      if (old.players.length === 0) delete floodRooms[socket.floodRoom];
+    }
+    let roomId = null;
+    for (const [id, room] of Object.entries(floodRooms)) {
+      if (room.players.length < 2 && room.state === 'waiting') { roomId = id; break; }
+    }
+    if (!roomId) {
+      roomId = 'flood-' + Date.now();
+      // Generate shared board
+      const COLS = ['#E74C3C','#3498DB','#2ECC71','#F1C40F','#9B59B6','#E67E22'];
+      const SIZE = 10;
+      const board = Array(SIZE*SIZE).fill(0).map(()=>Math.floor(Math.random()*6));
+      floodRooms[roomId] = { players: [], state: 'waiting', board, size: SIZE, colors: COLS };
+    }
+    const room = floodRooms[roomId];
+    const playerIndex = room.players.length;
+    room.players.push({ id: socket.id, userId: data.userId, index: playerIndex });
+    socket.join(roomId); socket.floodRoom = roomId; socket.floodIndex = playerIndex;
+    socket.emit('flood-assigned', { index: playerIndex, room: roomId, board: room.board, size: room.size, colors: room.colors });
+    if (room.players.length === 1) {
+      socket.emit('flood-waiting');
+    } else {
+      room.state = 'playing';
+      io.to(roomId).emit('flood-start', { room: roomId, board: room.board, size: room.size, colors: room.colors });
+    }
+  });
+  socket.on('flood-move', (data) => {
+    if (socket.floodRoom) io.to(socket.floodRoom).emit('flood-move', { ...data, playerIndex: socket.floodIndex });
+  });
+  socket.on('flood-win', (data) => {
+    if (socket.floodRoom) io.to(socket.floodRoom).emit('flood-win', { ...data, winner: socket.floodIndex });
+  });
+
+  // â”€â”€ Pictionary â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  socket.on('pictionary-draw', (data) => socket.broadcast.emit('pictionary-draw', data));
+  socket.on('pictionary-new-round', (data) => socket.broadcast.emit('pictionary-new-round', data));
+  socket.on('pictionary-guess', (data) => socket.broadcast.emit('pictionary-guess', data));
+  socket.on('pictionary-clear', () => socket.broadcast.emit('pictionary-clear'));
+
+
+  // â”€â”€ Pixel Art â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  socket.on('pixel-update', (data) => socket.broadcast.emit('pixel-update', data));
+  socket.on('pixel-clear', () => socket.broadcast.emit('pixel-clear'));
+
+  // â”€â”€ Drawing Race â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  socket.on('drawrace-draw', (data) => socket.broadcast.emit('drawrace-draw', data));
+  socket.on('drawrace-start', (data) => socket.broadcast.emit('drawrace-start', data));
+
+  // â”€â”€ Disconnect â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   socket.on('disconnect', () => {
     onlineUsers.delete(socket.id);
     io.emit('online-count', onlineUsers.size);
@@ -419,10 +587,13 @@ io.on('connection', (socket) => {
     if (socket.tttRoom && tttRooms[socket.tttRoom]) { const r = tttRooms[socket.tttRoom]; r.players = r.players.filter(p => p.id !== socket.id); if (r.players.length === 0) delete tttRooms[socket.tttRoom]; else io.to(socket.tttRoom).emit('ttt-opponent-left'); }
     if (socket.c4Room && c4Rooms[socket.c4Room]) { const r = c4Rooms[socket.c4Room]; r.players = r.players.filter(p => p.id !== socket.id); if (r.players.length === 0) delete c4Rooms[socket.c4Room]; else io.to(socket.c4Room).emit('c4-opponent-left'); }
     if (socket.chessRoom && chessRooms[socket.chessRoom]) { const r = chessRooms[socket.chessRoom]; r.players = r.players.filter(p => p.id !== socket.id); if (r.players.length === 0) delete chessRooms[socket.chessRoom]; else io.to(socket.chessRoom).emit('chess-opponent-left'); }
+    if (socket.rpsRoom && rpsRooms[socket.rpsRoom]) { const r = rpsRooms[socket.rpsRoom]; r.players = r.players.filter(p => p.id !== socket.id); if (r.players.length === 0) delete rpsRooms[socket.rpsRoom]; else io.to(socket.rpsRoom).emit('rps-opponent-left'); }
+    if (socket.snakeRoom && snakeRooms[socket.snakeRoom]) { const r = snakeRooms[socket.snakeRoom]; r.players = r.players.filter(p => p.id !== socket.id); if (r.players.length === 0) delete snakeRooms[socket.snakeRoom]; else io.to(socket.snakeRoom).emit('snake-opponent-left'); }
+    if (socket.floodRoom && floodRooms[socket.floodRoom]) { const r = floodRooms[socket.floodRoom]; r.players = r.players.filter(p => p.id !== socket.id); if (r.players.length === 0) delete floodRooms[socket.floodRoom]; else io.to(socket.floodRoom).emit('flood-opponent-left'); }
   });
 });
 
-// ── Pong Loop ────────────────────────────────────────────────
+// â”€â”€ Pong Loop â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function startPongLoop(roomId) {
   const iv = setInterval(() => {
     const room = pongRooms[roomId];
@@ -431,8 +602,8 @@ function startPongLoop(roomId) {
     b.x += b.vx; b.y += b.vy;
     if (b.y <= 10 || b.y >= 590) b.vy *= -1;
     const p0 = room.players[0], p1 = room.players[1];
-    if (b.x <= 30 && b.x >= 20 && b.y >= p0.y && b.y <= p0.y + 100) { b.vx = Math.abs(b.vx) * 1.05; b.vy += (Math.random() - 0.5) * 2; }
-    if (b.x >= 770 && b.x <= 780 && b.y >= p1.y && b.y <= p1.y + 100) { b.vx = -Math.abs(b.vx) * 1.05; b.vy += (Math.random() - 0.5) * 2; }
+    if (b.x <= 30 && b.x >= 20 && b.y >= p0.y && b.y <= p0.y + 100) { b.vx = Math.abs(b.vx) + 0.3; b.vy += (Math.random() - 0.5) * 2; }
+    if (b.x >= 770 && b.x <= 780 && b.y >= p1.y && b.y <= p1.y + 100) { b.vx = -(Math.abs(b.vx) + 0.3); b.vy += (Math.random() - 0.5) * 2; }
     if (b.x < 0) { room.scores[1]++; Object.assign(b, { x: 400, y: 300, vx: 4, vy: (Math.random() - 0.5) * 6 }); }
     else if (b.x > 800) { room.scores[0]++; Object.assign(b, { x: 400, y: 300, vx: -4, vy: (Math.random() - 0.5) * 6 }); }
     b.vx = Math.max(-12, Math.min(12, b.vx)); b.vy = Math.max(-8, Math.min(8, b.vy));
@@ -443,17 +614,19 @@ function startPongLoop(roomId) {
 
 // Cleanup
 setInterval(() => {
-  for (const rooms of [pongRooms, tttRooms, c4Rooms, chessRooms]) {
+  for (const rooms of [pongRooms, tttRooms, c4Rooms, chessRooms, rpsRooms, snakeRooms, floodRooms]) {
     for (const [id, r] of Object.entries(rooms)) { if (r.state === 'ended' || (r.state === 'waiting' && r.players?.length === 0)) delete rooms[id]; }
   }
 }, 300000);
 
 server.listen(PORT, () => {
   console.log(`
-  ╔══════════════════════════════════════════════════╗
-  ║   🌿 Glass-Tech Sanctuary 2026 ULTIMATE is LIVE ║
-  ║   → http://localhost:${PORT}                        ║
-  ║   → Myself Teja Priyan — Tech Enthusiast         ║
-  ║   → 20 Futuristic Features Loaded!               ║
-  ╚══════════════════════════════════════════════════╝`);
+  â•”â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•—
+  â•‘   ðŸŒ¿ Glass-Tech Sanctuary 2026 ULTIMATE is LIVE â•‘
+  â•‘   â†’ http://localhost:${PORT}                        â•‘
+  â•‘   â†’ Myself Teja Priyan â€” Tech Enthusiast         â•‘
+  â•‘   â†’ 20 Futuristic Features Loaded!               â•‘
+  â•šâ•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•`);
 });
+
+

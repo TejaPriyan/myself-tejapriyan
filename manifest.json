@@ -1,0 +1,17 @@
+{
+  "name": "Glass-Tech Sanctuary 2026",
+  "short_name": "Glass-Tech",
+  "description": "Ultimate fusion of medicine, engineering, AI and play — by Myself Teja Priyan",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#FDFBF7",
+  "theme_color": "#8DA399",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
