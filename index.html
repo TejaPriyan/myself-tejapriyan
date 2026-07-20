@@ -1084,12 +1084,15 @@ body{font-family:'Inter',-apple-system,sans-serif;background:var(--cream);color:
       <p style="font-size:11px;color:var(--charcoal-light);margin-bottom:8px">Type a description to generate an image</p>
       <div class="image-prompt-bar"><input type="text" class="image-prompt-input" id="imagePromptInput" placeholder="A glass city at golden hour..."><button class="btn btn-primary btn-sm" onclick="ImageLab.generate()">Generate ✨</button></div>
       <div style="display:flex;gap:4px;margin-bottom:12px;flex-wrap:wrap">
-        <button class="btn btn-secondary btn-sm" onclick="ImageLab.generateFromPrompt('A futuristic glass city at golden hour')">🏙️ City</button>
-        <button class="btn btn-secondary btn-sm" onclick="ImageLab.generateFromPrompt('A cyberpunk robot in neon rain')">🤖 Robot</button>
-        <button class="btn btn-secondary btn-sm" onclick="ImageLab.generateFromPrompt('Abstract neural network art glowing')">🧠 Neural</button>
-        <button class="btn btn-secondary btn-sm" onclick="ImageLab.generateFromPrompt('A magical forest with glowing mushrooms')">🌿 Forest</button>
-        <button class="btn btn-secondary btn-sm" onclick="ImageLab.generateFromPrompt('Anime girl with cherry blossoms')">🌸 Anime</button>
-        <button class="btn btn-secondary btn-sm" onclick="ImageLab.generateFromPrompt('Epic dragon over a burning castle')">🐉 Dragon</button>
+        <button class="btn btn-secondary btn-sm" onclick="ImageLab.generateFromPrompt('Anime girl with cherry blossoms, pink petals falling, soft sunlight, dreamy aesthetic')">🌸 Cherry Blossom</button>
+        <button class="btn btn-secondary btn-sm" onclick="ImageLab.generateFromPrompt('Anime boy standing in blazing fire, glowing eyes, dark aura, epic battle scene')">🔥 Fire Boy</button>
+        <button class="btn btn-secondary btn-sm" onclick="ImageLab.generateFromPrompt('Anime samurai under a blood-red moon, katana drawn, wind blowing cloak, cinematic')">⚔️ Samurai</button>
+        <button class="btn btn-secondary btn-sm" onclick="ImageLab.generateFromPrompt('Anime girl in a field of sunflowers, golden hour light, summer breeze, Studio Ghibli style')">🌻 Sunflower</button>
+        <button class="btn btn-secondary btn-sm" onclick="ImageLab.generateFromPrompt('Anime ocean goddess rising from waves, flowing aqua hair, bioluminescent water, ethereal')">🌊 Ocean</button>
+        <button class="btn btn-secondary btn-sm" onclick="ImageLab.generateFromPrompt('A lone astronaut standing on Mars, Earth visible in the sky, photorealistic, cinematic lighting')">🚀 Astronaut</button>
+        <button class="btn btn-secondary btn-sm" onclick="ImageLab.generateFromPrompt('A majestic white wolf howling on a snowy mountain peak, northern lights in the sky, ultra realistic')">🐺 Wolf</button>
+        <button class="btn btn-secondary btn-sm" onclick="ImageLab.generateFromPrompt('An ancient temple hidden in misty mountains, golden sunrise, birds flying, hyper detailed photography')">🏯 Temple</button>
+        <button class="btn btn-secondary btn-sm" onclick="ImageLab.generateFromPrompt('A sports car drifting on a wet road at night, neon reflections, rain, motion blur, cinematic')">🏎️ Drift</button>
       </div>
       <div class="generated-image" id="generatedImage"><span style="font-size:13px;color:var(--charcoal-light)">Image appears here ✨</span></div>
       <h4 style="font-size:12px;font-weight:600;margin:10px 0 5px">Gallery</h4>
@@ -4053,8 +4056,8 @@ const ImageLab=(()=>{
           const btn=document.createElement('button');
           btn.className='btn btn-secondary btn-sm';
           btn.style.cssText='position:absolute;bottom:8px;right:8px;z-index:10;opacity:0.9';
-          btn.textContent='Save';
-          btn.onclick=()=>{if(url.startsWith('data:')){const a=document.createElement('a');a.href=url;a.download='glass-tech-image.png';a.click();}else{window.open(url,'_blank');}};
+          btn.textContent='Open';
+          btn.onclick=()=>{const viewLink=data.viewUrl||url;window.open(viewLink,'_blank');};
           display.appendChild(btn);
           showToast('Image ready!','success');
           addXP(10,'image-lab');
@@ -4082,9 +4085,9 @@ const ImageLab=(()=>{
         if(!items||!items.length){gallery.innerHTML='<p style="font-size:11px;color:var(--charcoal-light);text-align:center;padding:8px">No images yet. Generate one! 🎨</p>';return;}
         gallery.innerHTML='';
         // Show all valid gallery items (supports both HTTP URLs and Base64 data URIs)
-        const validItems=items.filter(i=>i.url&&(i.url.startsWith('http')||i.url.startsWith('data:')));
+        const validItems=items.filter(i=>i.url&&(i.url.startsWith('http')||i.url.startsWith('data:')||i.url.startsWith('/')));
         if(!validItems.length){gallery.innerHTML='<p style="font-size:11px;color:var(--charcoal-light);text-align:center;padding:8px">No saved images yet. Generate one! 🎨</p>';return;}
-        validItems.slice(0,9).forEach(item=>{
+        validItems.slice(0,20).forEach(item=>{
           const d=document.createElement('div');
           d.className='gallery-thumb';
           d.title=item.prompt||'';
