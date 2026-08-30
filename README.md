@@ -5,7 +5,7 @@
 Glass-Tech Sanctuary is a full-stack single-page application that blends a personal portfolio with an interactive "sanctuary" of zones: anatomy and medical study tools, engineering challenges, a suite of mini-games, a 3D showcase, and **Ami** — a warm AI assistant with chat, story, debate, and personality-analysis modes. It runs as an Express + Socket.IO server with a PWA-ready front end and real-time chat.
 
 ![Favicon](favicon.svg)
-> **🌐 Live Demo:** [myself-tejapriyan.onrender.com](https://myself-tejapriyan.onrender.com/) — try it now! 🚀
+> **🌐 Live :** [myself-tejapriyan.onrender.com](https://myself-tejapriyan.onrender.com/) — try it now! 🚀
 ---
 
 ## ✨ Features
