@@ -1,7 +1,7 @@
 {
   "name": "glass-tech",
   "version": "1.0.0",
-  "description": "Glass-Tech SPA by Myself Teja Priyan",
+  "description": "Glass-Tech Sanctuary 2026 — ultimate fusion of medicine, engineering, AI and play, by Myself Teja Priyan",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
@@ -13,7 +13,29 @@
     "express": "^4.22.1",
     "socket.io": "^4.8.3"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC"
+  "keywords": [
+    "portfolio",
+    "threejs",
+    "express",
+    "socket.io",
+    "pwa",
+    "ai-chat",
+    "image-generation",
+    "games",
+    "medical",
+    "engineering"
+  ],
+  "author": "Myself Teja Priyan",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TejaPriyan/myself-tejapriyan.git"
+  },
+  "bugs": {
+    "url": "https://github.com/TejaPriyan/myself-tejapriyan/issues"
+  },
+  "homepage": "https://github.com/TejaPriyan/myself-tejapriyan#readme",
+  "engines": {
+    "node": ">=18.0.0"
+  }
 }
