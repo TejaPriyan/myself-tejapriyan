@@ -465,83 +465,272 @@ app.post('/api/generate-image', async (req, res) => {
 app.get('/api/gallery', (req, res) => { res.json((loadDB().gallery || []).slice(0, 20)); });
 
 // â”€â”€ Chat â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+
+function abortableFetch(url, options = {}, timeoutMs = 12000) {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
+  return fetch(url, { ...options, signal: controller.signal }).finally(() => clearTimeout(timer));
+}
+
+function pickReply(data) {
+  if (!data) return null;
+  const fromChoices = data.choices?.[0]?.message?.content || data.choices?.[0]?.text;
+  if (fromChoices && String(fromChoices).trim()) return String(fromChoices).trim();
+  const parts = data.candidates?.[0]?.content?.parts;
+  if (Array.isArray(parts)) {
+    const joined = parts.map(p => p?.text || '').join('').trim();
+    if (joined) return joined;
+  }
+  const other = data.reply || data.response || data.output_text || data.output || data.text;
+  if (typeof other === 'string' && other.trim()) return other.trim();
+  return null;
+}
+
+async function tryOpenAICompatible(url, apiKey, model, messages, extra = {}, timeoutMs = 12000) {
+  const headers = { 'Content-Type': 'application/json', ...(extra.headers || {}) };
+  if (apiKey) headers.Authorization = `Bearer ${apiKey}`;
+  const res = await abortableFetch(url, {
+    method: 'POST',
+    headers,
+    body: JSON.stringify({
+      model,
+      messages,
+      max_tokens: extra.max_tokens || 700,
+      temperature: extra.temperature ?? 0.7
+    })
+  }, timeoutMs);
+  const raw = await res.text();
+  let data = null;
+  try { data = raw ? JSON.parse(raw) : null; } catch (e) { /* non-JSON */ }
+  if (!res.ok) {
+    const err = new Error(`HTTP ${res.status}`);
+    err.status = res.status;
+    err.body = data?.error?.message || data?.error || raw.slice(0, 180);
+    throw err;
+  }
+  const reply = pickReply(data);
+  if (!reply) throw new Error('Empty reply');
+  return reply;
+}
+
+function localAmiFallback(message, mode) {
+  const q = String(message || '').toLowerCase();
+  if (mode === 'story') {
+    return "The sanctuary lights dim to a soft sage glow. You take one step forward and the glass doors breathe open — as if they have been waiting. Somewhere deeper inside, a heartbeat of circuitry keeps time. Tell me what happens next, and I will keep weaving.";
+  }
+  if (mode === 'debate') {
+    return "I'll take the other side: the stronger claim is the one that survives evidence, not the one that feels obvious. Share your position in one sentence and I will steel-man the opposite view.";
+  }
+  if (mode === 'personality') {
+    return "From what you have shared here, you seem curious and hands-on — someone who learns by playing. Keep asking specific questions; that is how your skill radar in the Sanctuary actually grows.";
+  }
+  if (/who are you|your name|what are you/.test(q)) {
+    return "I'm Ami, the AI companion of Glass-Tech Sanctuary — a calm little mind inside Teja Priyan's 2026 portfolio. Ask me about the games, study topics, or anything you are building.";
+  }
+  if (/teja|who (made|built|created)|developer|author/.test(q)) {
+    return "This sanctuary was built by Myself Teja Priyan — a tech enthusiast mixing medicine, engineering, games, and AI. You are standing in that playground right now.";
+  }
+  if (/game|play|pong|chess|wordle|flappy|tower|quiz/.test(q)) {
+    return "Game Zone has Zen-Pong, Chess, Snake Battle, Flappy Bird, Tower Defense, and Rhythm. Engineer Zone has Wordle, 2048, Maze, Stacker, and Minesweeper. Medical Zone has Speed Quiz, ECG Trainer, and CPR. Which one should I walk you through?";
+  }
+  if (/help|what can you do|features/.test(q)) {
+    return "I can chat, write code, tell stories, debate, make flashcards, and explain every zone here. Try /trivia, /riddle, /flashcard, or just ask a real question — anatomy, JavaScript, logic gates, whatever you need.";
+  }
+  if (/\b(hi|hello|hey|yo|hola|namaste)\b/.test(q) || q.trim().length < 12) {
+    return "Hello — I'm Ami, your guide through Glass-Tech Sanctuary. I can help with medical trivia, engineering puzzles, code, stories, debates, and the games here. What would you like to explore?";
+  }
+  return "I am still here, even if the cloud models hiccuped. Ask me about a Sanctuary game, a study topic, or paste a problem and I will work through it. You can also try /trivia or switch to Story / Debate mode.";
+}
+
 app.post('/api/chat', async (req, res) => {
-  const { message, history, userId, mode } = req.body;
-  if (!message) return res.status(400).json({ error: 'No message' });
+  const { message, history, userId, mode } = req.body || {};
+  if (!message || typeof message !== 'string' || !String(message).trim()) {
+    return res.status(400).json({ error: 'No message' });
+  }
+  const userMessage = String(message).trim().slice(0, 4000);
   try {
-    if (!OPENROUTER_API_KEY) throw new Error('No API key');
     let systemPrompt = AMI_SYSTEM_PROMPT;
     if (mode === 'story') systemPrompt += '\n\nYou are now in STORY MODE. Continue the user\'s story creatively with 2-3 paragraphs. Be vivid and engaging.';
     if (mode === 'debate') systemPrompt += '\n\nYou are now in DEBATE MODE. Argue the OPPOSITE side of whatever the user says. Be respectful but firm with logical counter-arguments.';
     if (mode === 'personality') systemPrompt += '\n\nAnalyze the user\'s personality based on their chat history. Be insightful, warm, and psychological.';
 
-    const messages = [
-      { role: 'system', content: systemPrompt }
-    ];
     const db = loadDB();
     const mem = db.users?.[userId]?.amiMemory || [];
-    for (const m of mem.slice(-5)) messages.push({ role: m.role === 'user' ? 'user' : 'assistant', content: m.text });
-    if (history?.length) for (const h of history.slice(-8)) messages.push({ role: h.role === 'user' ? 'user' : 'assistant', content: h.text });
-    messages.push({ role: 'user', content: message });
+    const convSource = (Array.isArray(history) && history.length) ? history.slice(-10) : mem.slice(-8);
+    const messages = [{ role: 'system', content: systemPrompt }];
+    for (const h of convSource) {
+      const role = h.role === 'user' ? 'user' : 'assistant';
+      const content = h.text || h.content || '';
+      if (!content) continue;
+      const last = messages[messages.length - 1];
+      if (last && last.role === role) last.content += '\n' + String(content).slice(0, 2000);
+      else messages.push({ role, content: String(content).slice(0, 2000) });
+    }
+    const lastMsg = messages[messages.length - 1];
+    if (lastMsg?.role === 'user') lastMsg.content = userMessage;
+    else messages.push({ role: 'user', content: userMessage });
 
-    // Try multiple free models in order â€” if one is rate-limited, fall to next
-    const FREE_MODELS = [
-      'openai/gpt-oss-20b:free',
-      'google/gemma-3-12b-it:free',
-      'google/gemma-3-4b-it:free',
-      'liquid/lfm-2.5-1.2b-instruct:free',
-      'meta-llama/llama-3.3-70b-instruct:free',
-      'meta-llama/llama-3.2-3b-instruct:free',
-      'nousresearch/hermes-3-llama-3.1-405b:free',
-    ];
+    const temperature = mode === 'story' ? 0.9 : mode === 'debate' ? 0.8 : 0.7;
+    const groqKey = process.env.GROQ_API_KEY;
+    const geminiKey = process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY || process.env.GOOGLE_GENERATIVE_AI_API_KEY;
+    const hfToken = process.env.HF_TOKEN || process.env.HUGGINGFACE_API_KEY;
+    const pollKey = process.env.POLLINATIONS_API_KEY;
 
     let reply = null;
+    let source = 'local';
     let lastError = '';
-    for (const model of FREE_MODELS) {
-      try {
-        const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${OPENROUTER_API_KEY}`,
-            'HTTP-Referer': process.env.RENDER_EXTERNAL_URL || `http://localhost:${PORT}`,
-            'X-Title': 'Glass-Tech Sanctuary'
-          },
-          body: JSON.stringify({ model, messages, max_tokens: 700, temperature: mode === 'story' ? 0.9 : mode === 'debate' ? 0.8 : 0.7 })
-        });
-        if (response.status === 429 || response.status === 503) {
-          lastError = `API ${response.status}`;
-          console.log(`[Ami] Model ${model} rate limited, trying next...`);
-          continue; // try next model
+
+    if (OPENROUTER_API_KEY) {
+      const FREE_MODELS = [
+        'openrouter/free',
+        'openai/gpt-oss-20b:free',
+        'nvidia/nemotron-nano-9b-v2:free',
+        'google/gemma-4-26b-a4b-it:free',
+        'meta-llama/llama-3.2-3b-instruct:free'
+      ];
+      for (const model of FREE_MODELS) {
+        try {
+          reply = await tryOpenAICompatible(
+            'https://openrouter.ai/api/v1/chat/completions',
+            OPENROUTER_API_KEY,
+            model,
+            messages,
+            {
+              temperature,
+              headers: {
+                'HTTP-Referer': process.env.RENDER_EXTERNAL_URL || `http://localhost:${PORT}`,
+                'X-Title': 'Glass-Tech Sanctuary'
+              }
+            },
+            8000
+          );
+          source = 'openrouter';
+          console.log(`[Ami] OpenRouter ok: ${model}`);
+          break;
+        } catch (e) {
+          lastError = e.body || e.message;
+          console.log(`[Ami] OpenRouter ${model} failed: ${lastError}`);
+          if (e.status === 401 || e.status === 403 || e.status === 402) break;
         }
-        if (!response.ok) throw new Error(`API ${response.status}`);
-        const data = await response.json();
-        reply = data.choices?.[0]?.message?.content || null;
-        if (reply) { console.log(`[Ami] Responded using: ${model}`); break; }
-      } catch (e) {
-        lastError = e.message;
-        console.log(`[Ami] Model ${model} failed: ${e.message}`);
+      }
+    } else {
+      console.log('[Ami] No OPENROUTER_API_KEY — trying other providers');
+    }
+
+    if (!reply && groqKey) {
+      for (const model of ['llama-3.1-8b-instant', 'llama-3.3-70b-versatile']) {
+        try {
+          reply = await tryOpenAICompatible('https://api.groq.com/openai/v1/chat/completions', groqKey, model, messages, { temperature }, 8000);
+          source = 'groq';
+          console.log(`[Ami] Groq ok: ${model}`);
+          break;
+        } catch (e) {
+          lastError = e.body || e.message;
+          console.log(`[Ami] Groq ${model} failed: ${lastError}`);
+          if (e.status === 401 || e.status === 403) break;
+        }
       }
     }
 
-    if (!reply) throw new Error(lastError || 'All models failed');
+    if (!reply && geminiKey) {
+      const geminiModels = ['gemini-2.0-flash', 'gemini-2.5-flash', 'gemini-1.5-flash'];
+      const contents = messages.filter(m => m.role !== 'system').map(m => ({
+        role: m.role === 'assistant' ? 'model' : 'user',
+        parts: [{ text: m.content }]
+      }));
+      for (const model of geminiModels) {
+        try {
+          const res = await abortableFetch(
+            `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${encodeURIComponent(geminiKey)}`,
+            {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                system_instruction: { parts: [{ text: systemPrompt }] },
+                contents,
+                generationConfig: { maxOutputTokens: 700, temperature }
+              })
+            },
+            8000
+          );
+          const raw = await res.text();
+          let data = null;
+          try { data = raw ? JSON.parse(raw) : null; } catch (e) { /* ignore */ }
+          if (!res.ok) {
+            const err = new Error(`HTTP ${res.status}`);
+            err.status = res.status;
+            err.body = data?.error?.message || raw.slice(0, 180);
+            throw err;
+          }
+          reply = pickReply(data);
+          if (!reply) throw new Error('Empty reply');
+          source = 'gemini';
+          console.log(`[Ami] Gemini ok: ${model}`);
+          break;
+        } catch (e) {
+          lastError = e.body || e.message;
+          console.log(`[Ami] Gemini ${model} failed: ${lastError}`);
+          if (e.status === 400 || e.status === 401 || e.status === 403) break;
+        }
+      }
+    }
 
-    if (userId && db.users?.[userId]) {
+    if (!reply && hfToken) {
+      for (const model of ['meta-llama/Llama-3.2-3B-Instruct', 'Qwen/Qwen2.5-7B-Instruct']) {
+        try {
+          reply = await tryOpenAICompatible('https://router.huggingface.co/v1/chat/completions', hfToken, model, messages, { temperature }, 16000);
+          source = 'huggingface';
+          console.log(`[Ami] Hugging Face ok: ${model}`);
+          break;
+        } catch (e) {
+          lastError = e.body || e.message;
+          console.log(`[Ami] Hugging Face ${model} failed: ${lastError}`);
+          if (e.status === 401 || e.status === 403) break;
+        }
+      }
+    }
+
+    if (!reply) {
+      const pollEndpoints = [
+        ['https://text.pollinations.ai/openai', 'openai'],
+        ['https://gen.pollinations.ai/v1/chat/completions', 'openai']
+      ];
+      for (const [url, model] of pollEndpoints) {
+        try {
+          reply = await tryOpenAICompatible(url, pollKey, model, messages, { temperature }, 10000);
+          source = 'pollinations';
+          console.log(`[Ami] Pollinations ok: ${model} @ ${url}`);
+          break;
+        } catch (e) {
+          lastError = e.body || e.message;
+          console.log(`[Ami] Pollinations ${model} failed: ${lastError}`);
+        }
+      }
+    }
+
+    if (!reply) {
+      console.log('[Ami] All providers failed. Last error:', lastError);
+      reply = localAmiFallback(userMessage, mode);
+    }
+
+    if (userId) {
+      if (!db.users) db.users = {};
+      if (!db.users[userId]) {
+        db.users[userId] = { xp: 0, level: 1, gamesPlayed: {}, joinedAt: new Date().toISOString(), achievements: [], chatCount: 0, totalGames: 0, dailyProgress: {}, visitedZones: [], globalChats: 0, activityHistory: [] };
+      }
       if (!db.users[userId].amiMemory) db.users[userId].amiMemory = [];
-      db.users[userId].amiMemory.push({ role: 'user', text: message }, { role: 'assistant', text: reply });
+      db.users[userId].amiMemory.push({ role: 'user', text: userMessage }, { role: 'assistant', text: reply });
       if (db.users[userId].amiMemory.length > 40) db.users[userId].amiMemory = db.users[userId].amiMemory.slice(-30);
       db.users[userId].chatCount = (db.users[userId].chatCount || 0) + 1;
       saveDB(db);
     }
-    res.json({ reply });
+    res.json({ reply, source });
   } catch (e) {
     console.error('Chat error:', e.message);
-    // Fallback response
-    res.json({ reply: "ðŸŒ¿ I'm having a little trouble connecting to my brain right now. But don't worry â€” I'm still here! Want to play a game or explore the Sanctuary? ðŸŒŸ" });
+    res.json({ reply: localAmiFallback(userMessage, mode), source: 'local' });
   }
 });
 
-// â”€â”€ User XP â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 app.post('/api/user/xp', (req, res) => {
   const { userId, xpGain, game } = req.body;
   if (!userId) return res.status(400).json({ error: 'No userId' });
@@ -939,7 +1128,14 @@ setInterval(() => {
   }
 }, 300000);
 
-server.listen(PORT, () => {
+server.listen(PORT, '0.0.0.0', () => {
+  console.log('[Ami] providers', {
+    openrouter: !!OPENROUTER_API_KEY,
+    groq: !!process.env.GROQ_API_KEY,
+    gemini: !!(process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY || process.env.GOOGLE_GENERATIVE_AI_API_KEY),
+    huggingface: !!(process.env.HF_TOKEN || process.env.HUGGINGFACE_API_KEY),
+    pollinations: true
+  });
   console.log(`
   â•”â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•—
   â•‘   ðŸŒ¿ Glass-Tech Sanctuary 2026 ULTIMATE is LIVE â•‘
@@ -948,5 +1144,6 @@ server.listen(PORT, () => {
   â•‘   â†’ 20 Futuristic Features Loaded!               â•‘
   â•šâ•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•`);
 });
+
 
 
