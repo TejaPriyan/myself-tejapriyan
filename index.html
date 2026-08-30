@@ -3622,8 +3622,8 @@ const AmiChat=(()=>{
   const inputEl=document.getElementById('chatInput');
   const bioOrb=document.getElementById('bioOrb');
   let history=[],recognition=null,isListening=false,mode='normal';
-  let voicePref='female',isSpeaking=false;
-  inputEl.addEventListener('keydown',e=>{if(e.key==='Enter')send();});
+  let voicePref='female',isSpeaking=false,sending=false;
+  if(inputEl) inputEl.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();send();}});
   function setMode(newMode){
     mode=newMode;
     document.querySelectorAll('.chat-mode-btn').forEach(btn=>btn.classList.remove('active'));
@@ -3661,10 +3661,21 @@ const AmiChat=(()=>{
     {q:'What can you break even if you never pick it up or touch it?',a:'A promise'},
   ];
   let miniGameState=null;
+  function askAmi(payload, timeoutMs){
+    const ctrl=typeof AbortController!=='undefined'?new AbortController():null;
+    const kill=setTimeout(()=>{try{ctrl&&ctrl.abort();}catch(e){}}, timeoutMs||45000);
+    return fetch('/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload),signal:ctrl?ctrl.signal:undefined})
+      .then(async r=>{
+        const data=await r.json().catch(()=>({}));
+        if(!data.reply && !r.ok) throw new Error(data.error||('HTTP '+r.status));
+        return data;
+      })
+      .finally(()=>clearTimeout(kill));
+  }
   function send(){
-    const text=inputEl.value.trim();
-    if(!text)return;
-    inputEl.value='';
+    const text=(inputEl?inputEl.value:'').trim();
+    if(!text||sending)return;
+    if(inputEl) inputEl.value='';
     addMessage(text,'user');
     history.push({role:'user',text});
     // ── IMAGE GENERATION ──
@@ -3762,13 +3773,12 @@ const AmiChat=(()=>{
     // ── FLASHCARD MODE ──
     if(mode==='flashcard'){
       const typingId=showTyping();
-      fetch('/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({
+      sending=true;
+      askAmi({
         message:'Generate 6 flashcards about: '+text+'. Return ONLY a JSON array like: [{"front":"question","back":"answer"}]. No markdown, no explanation, just the JSON array.',
         history:[],userId:USER_ID,mode:'normal'
-      })})
-        .then(r=>r.json())
+      })
         .then(data=>{
-          removeTyping(typingId);
           try{
             const jsonMatch=(data.reply||'').match(/\[[\s\S]*\]/);
             if(jsonMatch){
@@ -3780,21 +3790,28 @@ const AmiChat=(()=>{
           }catch(e){}
           addMessage('📋 I couldn\'t generate flashcards for that topic. Try being more specific, like "bones of the skull" or "React hooks".','ami');
         })
-        .catch(()=>{removeTyping(typingId);addMessage('Connection issue. Try again. 🌿','ami');});
+        .catch(err=>{
+          const msg=(err&&err.name==='AbortError')?'That took too long — try a shorter topic. 🌿':'Connection issue. Try again. 🌿';
+          addMessage(msg,'ami');
+        })
+        .finally(()=>{removeTyping(typingId);sending=false;});
       return;
     }
     // ── NORMAL CHAT ──
     const typingId=showTyping();
-    fetch('/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:text,history:history.slice(-10),userId:USER_ID,mode})})
-      .then(r=>r.json())
+    sending=true;
+    askAmi({message:text,history:history.slice(-10),userId:USER_ID,mode})
       .then(data=>{
-        removeTyping(typingId);
         const reply=data.reply||"I'm contemplating. Try again? 🌿";
         addMessage(reply,'ami');
-        history.push({role:'model',text:reply});
-        speak(reply);
+        history.push({role:'assistant',text:reply});
+        try{speak(reply);}catch(e){}
       })
-      .catch(()=>{removeTyping(typingId);addMessage("Connection lost. Try again. 🌿",'ami');});
+      .catch(err=>{
+        const msg=(err&&err.name==='AbortError')?'That took too long — try a shorter question. 🌿':"I couldn't reach my brain just then. Try again in a moment. 🌿";
+        addMessage(msg,'ami');
+      })
+      .finally(()=>{removeTyping(typingId);sending=false;});
   }
   // ── FLASHCARD RENDERER ──
   function renderFlashcards(cards,topic){
