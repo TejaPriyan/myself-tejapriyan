@@ -577,6 +577,7 @@ app.post('/api/chat', async (req, res) => {
     const pollKey = process.env.POLLINATIONS_API_KEY;
 
     let reply = null;
+    let source = 'local';
     let lastError = '';
 
     if (OPENROUTER_API_KEY) {
@@ -603,6 +604,7 @@ app.post('/api/chat', async (req, res) => {
             },
             8000
           );
+          source = 'openrouter';
           console.log(`[Ami] OpenRouter ok: ${model}`);
           break;
         } catch (e) {
@@ -619,6 +621,7 @@ app.post('/api/chat', async (req, res) => {
       for (const model of ['llama-3.1-8b-instant', 'llama-3.3-70b-versatile']) {
         try {
           reply = await tryOpenAICompatible('https://api.groq.com/openai/v1/chat/completions', groqKey, model, messages, { temperature }, 8000);
+          source = 'groq';
           console.log(`[Ami] Groq ok: ${model}`);
           break;
         } catch (e) {
@@ -661,6 +664,7 @@ app.post('/api/chat', async (req, res) => {
           }
           reply = pickReply(data);
           if (!reply) throw new Error('Empty reply');
+          source = 'gemini';
           console.log(`[Ami] Gemini ok: ${model}`);
           break;
         } catch (e) {
@@ -675,6 +679,7 @@ app.post('/api/chat', async (req, res) => {
       for (const model of ['meta-llama/Llama-3.2-3B-Instruct', 'Qwen/Qwen2.5-7B-Instruct']) {
         try {
           reply = await tryOpenAICompatible('https://router.huggingface.co/v1/chat/completions', hfToken, model, messages, { temperature }, 16000);
+          source = 'huggingface';
           console.log(`[Ami] Hugging Face ok: ${model}`);
           break;
         } catch (e) {
@@ -693,6 +698,7 @@ app.post('/api/chat', async (req, res) => {
       for (const [url, model] of pollEndpoints) {
         try {
           reply = await tryOpenAICompatible(url, pollKey, model, messages, { temperature }, 10000);
+          source = 'pollinations';
           console.log(`[Ami] Pollinations ok: ${model} @ ${url}`);
           break;
         } catch (e) {
@@ -718,10 +724,10 @@ app.post('/api/chat', async (req, res) => {
       db.users[userId].chatCount = (db.users[userId].chatCount || 0) + 1;
       saveDB(db);
     }
-    res.json({ reply });
+    res.json({ reply, source });
   } catch (e) {
     console.error('Chat error:', e.message);
-    res.json({ reply: localAmiFallback(userMessage, mode) });
+    res.json({ reply: localAmiFallback(userMessage, mode), source: 'local' });
   }
 });
 

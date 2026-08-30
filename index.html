@@ -3661,14 +3661,85 @@ const AmiChat=(()=>{
     {q:'What can you break even if you never pick it up or touch it?',a:'A promise'},
   ];
   let miniGameState=null;
+  function weakAmiReply(data){
+    const r=String((data&&data.reply)||'');
+    if(!r) return true;
+    if(data&&data.source&&data.source!=='local') return false;
+    if(/trouble connecting to my brain/i.test(r)) return true;
+    if(/ðŸŒ¿|â€”|ðŸŒŸ/.test(r)) return true;
+    if(data&&data.source==='local') return true;
+    return false;
+  }
+  function amiBrowserMessages(payload){
+    let sys='You are Ami, a calm, wise, friendly AI in Glass-Tech Sanctuary by Teja Priyan. Keep answers under 180 words. Use emojis sparingly.';
+    if(payload.mode==='story') sys+=' STORY MODE: continue the user story vividly in 2-3 paragraphs.';
+    if(payload.mode==='debate') sys+=' DEBATE MODE: argue the opposite side respectfully.';
+    if(payload.mode==='personality') sys+=' Analyze the user personality warmly from chat history.';
+    const msgs=[{role:'system',content:sys}];
+    (payload.history||[]).slice(-8).forEach(h=>{
+      const content=h.text||h.content||'';
+      if(content) msgs.push({role:h.role==='user'?'user':'assistant',content:String(content).slice(0,1500)});
+    });
+    msgs.push({role:'user',content:String(payload.message||'').slice(0,4000)});
+    return msgs;
+  }
+  function pickCloudText(data, raw){
+    const fromJson=data&&(data.choices&&data.choices[0]&&(data.choices[0].message&&data.choices[0].message.content||data.choices[0].text)||data.reply||data.response||data.text);
+    if(fromJson&&String(fromJson).trim()) return String(fromJson).trim();
+    const t=String(raw||'').trim();
+    if(!t||t[0]==='{'||t[0]==='<'||/^error\b/i.test(t)) return null;
+    if(t.length<2||t.length>8000) return null;
+    return t;
+  }
+  async function askAmiBrowser(payload){
+    const messages=amiBrowserMessages(payload);
+    const ctrl=typeof AbortController!=='undefined'?new AbortController():null;
+    const kill=setTimeout(()=>{try{ctrl&&ctrl.abort();}catch(e){}},22000);
+    const signal=ctrl?ctrl.signal:undefined;
+    try{
+      const posts=[['https://text.pollinations.ai/openai','openai'],['https://gen.pollinations.ai/v1/chat/completions','openai']];
+      for(const pair of posts){
+        try{
+          const r=await fetch(pair[0],{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:pair[1],messages,temperature:0.7}),signal});
+          const raw=await r.text();
+          let data=null; try{data=JSON.parse(raw);}catch(e){}
+          const text=pickCloudText(data, raw);
+          if(text&&!/trouble connecting to my brain/i.test(text)) return text;
+        }catch(e){}
+      }
+      const prompt=messages.map(m=>m.role.toUpperCase()+': '+m.content).join('\n\n').slice(0,1600);
+      const gets=[
+        'https://text.pollinations.ai/'+encodeURIComponent(prompt),
+        'https://text.pollinations.ai/'+encodeURIComponent(prompt)+'?model=openai'
+      ];
+      for(const url of gets){
+        try{
+          const r=await fetch(url,{signal});
+          const raw=await r.text();
+          let data=null; try{data=JSON.parse(raw);}catch(e){}
+          const text=pickCloudText(data, raw);
+          if(text&&!/trouble connecting to my brain/i.test(text)) return text;
+        }catch(e){}
+      }
+    }finally{clearTimeout(kill);}
+    return null;
+  }
   function askAmi(payload, timeoutMs){
     const ctrl=typeof AbortController!=='undefined'?new AbortController():null;
-    const kill=setTimeout(()=>{try{ctrl&&ctrl.abort();}catch(e){}}, timeoutMs||45000);
+    const kill=setTimeout(()=>{try{ctrl&&ctrl.abort();}catch(e){}}, timeoutMs||12000);
     return fetch('/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload),signal:ctrl?ctrl.signal:undefined})
       .then(async r=>{
         const data=await r.json().catch(()=>({}));
         if(!data.reply && !r.ok) throw new Error(data.error||('HTTP '+r.status));
         return data;
+      })
+      .catch(()=>({reply:'',source:'local'}))
+      .then(async data=>{
+        if(!weakAmiReply(data)) return data;
+        const cloud=await askAmiBrowser(payload);
+        if(cloud) return {reply:cloud,source:'browser'};
+        if(data&&data.reply&&!/trouble connecting to my brain/i.test(data.reply)&&!/ðŸŒ¿/.test(data.reply)) return data;
+        throw new Error('Ami offline');
       })
       .finally(()=>clearTimeout(kill));
   }
@@ -3790,9 +3861,8 @@ const AmiChat=(()=>{
           }catch(e){}
           addMessage('📋 I couldn\'t generate flashcards for that topic. Try being more specific, like "bones of the skull" or "React hooks".','ami');
         })
-        .catch(err=>{
-          const msg=(err&&err.name==='AbortError')?'That took too long — try a shorter topic. 🌿':'Connection issue. Try again. 🌿';
-          addMessage(msg,'ami');
+        .catch(()=>{
+          addMessage('Could not build flashcards just then. Try a simpler topic, like \"heart anatomy\". 🌿','ami');
         })
         .finally(()=>{removeTyping(typingId);sending=false;});
       return;
@@ -3807,9 +3877,8 @@ const AmiChat=(()=>{
         history.push({role:'assistant',text:reply});
         try{speak(reply);}catch(e){}
       })
-      .catch(err=>{
-        const msg=(err&&err.name==='AbortError')?'That took too long — try a shorter question. 🌿':"I couldn't reach my brain just then. Try again in a moment. 🌿";
-        addMessage(msg,'ami');
+      .catch(()=>{
+        addMessage('The cloud models are busy. Ask again in a few seconds — or try /trivia while we reconnect. 🌿','ami');
       })
       .finally(()=>{removeTyping(typingId);sending=false;});
   }
