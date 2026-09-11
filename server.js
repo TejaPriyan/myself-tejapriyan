@@ -42,6 +42,14 @@ app.use((req, res, next) => {
   if (blockedJsFiles.includes(p)) return res.status(403).send('Forbidden');
   next();
 });
+// 3D Models: Serve from models/ directory and provide root fallback for backward-compatibility
+app.get('/*.glb', (req, res, next) => {
+  const glbPath = path.join(__dirname, 'models', path.basename(req.path));
+  if (fs2.existsSync(glbPath)) {
+    return res.sendFile(glbPath);
+  }
+  next();
+});
 app.use(express.static(__dirname, { maxAge: '1d' }));
 
 const AMI_SYSTEM_PROMPT = `You are "Ami", a calm, wise, and friendly AI assistant embedded in the Glass-Tech Sanctuary — a personal portfolio and gaming hub built by Teja Priyan.

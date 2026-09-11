@@ -11,12 +11,12 @@ Glass-Tech Sanctuary is an interactive, full-stack digital universe that fuses p
 ## ✨ What We Have in Glass-Tech Sanctuary
 
 ### 🩺 Medical Zone
-* **Interactive 3D Human Brain (`human_brain.glb`)**: Full 3D orbital inspection of neuroanatomy, cerebral lobes, and high-yield physiology facts.
-* **Beating Heart 3D Simulation (`beating-heart.glb`)**: Dynamic cardiac cycle visualization with rhythmic anatomical contraction.
+* **Interactive 3D Human Brain (`models/human_brain.glb`)**: Full 3D orbital inspection of neuroanatomy, cerebral lobes, and high-yield physiology facts.
+* **Beating Heart 3D Simulation (`models/beating-heart.glb`)**: Dynamic cardiac cycle visualization with rhythmic anatomical contraction.
 * **Medical Study Utilities**: Speed quizzes, pharmacology drug-matching challenges, flashcard trainers, and clinical calculators.
 
 ### ⚙️ Engineer Zone
-* **3D Cyberpunk Gadget Showcase**: Interactive inspection of high-fidelity 3D assets including the Cyberpunk Laptop (`cyberpunk_laptop.glb`), Drones, UFO (`ufo.glb`), and custom mechanical models.
+* **3D Cyberpunk Gadget Showcase**: Interactive inspection of high-fidelity 3D assets including the Cyberpunk Laptop (`models/cyberpunk_laptop.glb`), Drones, UFO (`models/ufo.glb`), and custom mechanical models.
 * **Engineering Logic & Challenges**: Code puzzles, problem-solving trials, and technical simulations.
 
 ### 🎮 Game Zone (Mind & Skill Suite)

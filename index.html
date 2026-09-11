@@ -4875,7 +4875,7 @@ window.Models3D = (() => {
   let livePhoenix = null, liveMixer = null, liveClock = new THREE.Clock();
   
   function initLivePhoenix() {
-    gltfLoader.load('real-time_bones_demo_phoenix_bird.glb', (gltf) => {
+    gltfLoader.load('models/real-time_bones_demo_phoenix_bird.glb', (gltf) => {
       livePhoenix = gltf.scene;
       const box = new THREE.Box3().setFromObject(livePhoenix);
       const mSize = box.getSize(new THREE.Vector3());
@@ -4887,7 +4887,7 @@ window.Models3D = (() => {
         liveMixer.clipAction(gltf.animations[0]).play();
       }
     }, undefined, () => {
-      gltfLoader.load('phoenix_bird.glb', (gltf) => {
+      gltfLoader.load('models/phoenix_bird.glb', (gltf) => {
         livePhoenix = gltf.scene;
         const box = new THREE.Box3().setFromObject(livePhoenix);
         const mSize = box.getSize(new THREE.Vector3());
@@ -4913,10 +4913,10 @@ window.Models3D = (() => {
     return true;
   }
   setTimeout(() => {
-    preRenderSprite('tower_gun', 'gun_of_leila_from_d_the_vampire_hunter_-_blood_l.glb', 64, { targetSize: 10 });
-    preRenderSprite('tower_water', 'water_tower.glb', 64, { targetSize: 14, rotX: 0.2, rotY: -0.5 });
-    preRenderSprite('enemy_boss', 'nme_machine_gunner_2_of_5.glb', 64, { targetSize: 14, rotY: Math.PI });
-    preRenderSprite('enemy_fast', 'ufo.glb', 48, { targetSize: 12, rotX: 0.2 });
+    preRenderSprite('tower_gun', 'models/gun_of_leila_from_d_the_vampire_hunter_-_blood_l.glb', 64, { targetSize: 10 });
+    preRenderSprite('tower_water', 'models/water_tower.glb', 64, { targetSize: 14, rotX: 0.2, rotY: -0.5 });
+    preRenderSprite('enemy_boss', 'models/nme_machine_gunner_2_of_5.glb', 64, { targetSize: 14, rotY: Math.PI });
+    preRenderSprite('enemy_fast', 'models/ufo.glb', 48, { targetSize: 12, rotX: 0.2 });
     initLivePhoenix();
   }, 1000);
   return { create3DViewer, sprites, drawLivePhoenix };
@@ -4924,12 +4924,12 @@ window.Models3D = (() => {
 window.addEventListener('load', () => {
   setTimeout(() => {
     if(!window.Models3D || !window.Models3D.create3DViewer) return;
-    window.Models3D.create3DViewer('amiAvatar3D', 'kizuna_ai_decimated.glb', { targetSize: 18, yOffset: -8, cameraZ: 25 });
-    window.Models3D.create3DViewer('engineerLaptop3D', 'cyberpunk_laptop.glb', { targetSize: 12, autoRotate: false });
-    window.Models3D.create3DViewer('homeMascot3D', 'fall_guys_-_chilly_bear_gears.glb', { targetSize: 15, autoRotate: false, yOffset: -5 });
+    window.Models3D.create3DViewer('amiAvatar3D', 'models/kizuna_ai_decimated.glb', { targetSize: 18, yOffset: -8, cameraZ: 25 });
+    window.Models3D.create3DViewer('engineerLaptop3D', 'models/cyberpunk_laptop.glb', { targetSize: 12, autoRotate: false });
+    window.Models3D.create3DViewer('homeMascot3D', 'models/fall_guys_-_chilly_bear_gears.glb', { targetSize: 15, autoRotate: false, yOffset: -5 });
     // Medical Zone 3D Models
-    window.Models3D.create3DViewer('medHeart3D', 'beating-heart.glb', { targetSize: 14, autoRotate: true, autoRotateSpeed: 0.008, cameraZ: 22, ambientIntensity: 1.0, dirIntensity: 1.2 });
-    window.Models3D.create3DViewer('medBrain3D', 'human_brain.glb', { targetSize: 14, autoRotate: true, autoRotateSpeed: 0.006, cameraZ: 22, ambientIntensity: 0.9, dirIntensity: 1.1 });
+    window.Models3D.create3DViewer('medHeart3D', 'models/beating-heart.glb', { targetSize: 14, autoRotate: true, autoRotateSpeed: 0.008, cameraZ: 22, ambientIntensity: 1.0, dirIntensity: 1.2 });
+    window.Models3D.create3DViewer('medBrain3D', 'models/human_brain.glb', { targetSize: 14, autoRotate: true, autoRotateSpeed: 0.006, cameraZ: 22, ambientIntensity: 0.9, dirIntensity: 1.1 });
   }, 1500);
 });
 // PWA Service Worker Registration

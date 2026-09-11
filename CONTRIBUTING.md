@@ -60,7 +60,7 @@ Open an issue with:
 - **Frontend**: vanilla JS + CSS (glassmorphism design tokens live in `:root` of `index.html`). Avoid heavy frameworks.
 - **Backend**: keep `server.js` organized; new routes are grouped by feature with a comment header.
 - **Variables**: any new secret goes through `process.env`, is documented in `.env.example` and the README table, and is never hard-coded.
-- **3D assets**: keep `.glb` files reasonably sized; prefer decimated/optimized models.
+- **3D assets**: place all `.glb` models inside the `models/` directory; keep files reasonably sized; prefer decimated/optimized models.
 
 ## Commit Conventions
 
