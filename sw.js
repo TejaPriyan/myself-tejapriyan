@@ -1,4 +1,4 @@
-const CACHE_NAME = 'glass-tech-v4';
+const CACHE_NAME = 'glass-tech-v5';
 const ASSETS = [
   '/',
   '/index.html',

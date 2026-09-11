@@ -1,17 +1,33 @@
 {
-  "name": "Glass-Tech Sanctuary 2026",
-  "short_name": "Glass-Tech",
-  "description": "Ultimate fusion of medicine, engineering, AI and play — by Myself Teja Priyan",
+  "name": "Glass-Tech Sanctuary 2026 — Myself Teja Priyan",
+  "short_name": "Teja Priyan",
+  "description": "Glass-Tech Sanctuary 2026 — Ultimate fusion of medicine, engineering, AI and play by Myself Teja Priyan",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#FDFBF7",
-  "theme_color": "#8DA399",
+  "background_color": "#000000",
+  "theme_color": "#000000",
   "icons": [
+    {
+      "src": "/favicon-32x32.png",
+      "sizes": "32x32",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
     {
       "src": "/favicon.svg",
       "sizes": "any",
-      "type": "image/svg+xml",
-      "purpose": "any maskable"
+      "type": "image/svg+xml"
     }
   ]
 }

@@ -1145,5 +1145,11 @@ server.listen(PORT, '0.0.0.0', () => {
   â•šâ•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•`);
 });
 
+// Global Error & Rejection Guardians (Prevents Crash on Network / Socket Drops)
+process.on('uncaughtException', (err) => {
+  console.error('[SERVER] Uncaught Exception guarded:', err.message);
+});
 
-
+process.on('unhandledRejection', (reason) => {
+  console.error('[SERVER] Unhandled Rejection guarded:', reason);
+});

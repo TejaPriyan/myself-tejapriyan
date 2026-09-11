@@ -35,7 +35,6 @@ async function pollMagnificTask(taskId, maxWaitMs = 60000) {
       console.log(`[MAGNIFIC] Task ${taskId} status: ${status}`);
 
       if (status === 'COMPLETED' || status === 'SUCCESS') {
-        // Magnific returns: data.generated = ["https://..."] (array of strings)
         const url =
           (Array.isArray(data.generated) && typeof data.generated[0] === 'string' && data.generated[0]) ||
           (Array.isArray(data.generated) && data.generated[0]?.url) ||
@@ -52,8 +51,6 @@ async function pollMagnificTask(taskId, maxWaitMs = 60000) {
         console.log('[MAGNIFIC] Task failed:', JSON.stringify(data).slice(0, 200));
         return null;
       }
-
-      // CREATED / PROCESSING / QUEUED — keep polling
     } catch (e) {
       console.log('[MAGNIFIC] Poll error:', e.message);
     }
@@ -65,6 +62,9 @@ async function pollMagnificTask(taskId, maxWaitMs = 60000) {
 
 // ── API 1: Magnific Flux 2 Pro (Primary) ─────────────────────
 async function tryMagnific(prompt) {
+  if (!MAGNIFIC_API_KEY) {
+    return null; // Skip directly to fallback if key not configured
+  }
   try {
     console.log('[IMG] 🟣 Trying Magnific Flux 2 Pro...');
     const res = await fetch(`${MAGNIFIC_BASE}/v1/ai/text-to-image/flux-2-pro`, {
@@ -113,6 +113,9 @@ async function tryMagnific(prompt) {
 
 // ── API 2: Cloudflare Worker (Fallback) ──────────────────────
 async function tryCloudflare(prompt) {
+  if (!CF_API_URL || !CF_API_KEY) {
+    return null; // Skip directly to fallback if Cloudflare is not configured
+  }
   try {
     console.log('[IMG] 🔵 Trying Cloudflare Worker...');
     const controller = new AbortController();
@@ -147,7 +150,6 @@ async function tryCloudflare(prompt) {
       return { imageUrl, usedAPI: 'Cloudflare-Worker', isBase64: true };
     }
 
-    // JSON url response
     try {
       const data = await res.json();
       if (data.url || data.image_url) {
