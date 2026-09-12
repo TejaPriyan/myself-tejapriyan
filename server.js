@@ -42,6 +42,18 @@ app.use((req, res, next) => {
   if (blockedJsFiles.includes(p)) return res.status(403).send('Forbidden');
   next();
 });
+
+// Google Search Console Verification, Sitemap, and Robots
+app.get('/google2af4e1ed3191321d.html', (req, res) => {
+  res.type('text/html').send('google-site-verification: google2af4e1ed3191321d.html');
+});
+app.get('/sitemap.xml', (req, res) => {
+  res.type('application/xml').sendFile(path.join(__dirname, 'sitemap.xml'));
+});
+app.get('/robots.txt', (req, res) => {
+  res.type('text/plain').sendFile(path.join(__dirname, 'robots.txt'));
+});
+
 // 3D Models: Serve from models/ directory and provide root fallback for backward-compatibility
 app.get('/*.glb', (req, res, next) => {
   const glbPath = path.join(__dirname, 'models', path.basename(req.path));
