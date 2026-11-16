@@ -11,9 +11,7 @@
 <link rel="canonical" href="https://myself-tejapriyan.onrender.com/">
 
 <!-- Google & Search Engine Verification -->
-<meta name="google-site-verification" content="google2af4e1ed3191321d.html">
 <meta name="google-site-verification" content="2af4e1ed3191321d">
-<meta name="google-site-verification" content="google87bb3bc53ec346d2.html">
 <meta name="google-site-verification" content="87bb3bc53ec346d2">
 <meta name="msvalidate.01" content="55A817D313620EDBE729ED7B7D416DA7">
 
@@ -41,12 +39,12 @@
 <meta name="twitter:image" content="https://myself-tejapriyan.onrender.com/logo.png">
 
 <!-- Favicons & App Manifest -->
-<link rel="manifest" href="/manifest.json">
-<link rel="icon" href="/favicon.ico" sizes="any">
-<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-<link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png">
-<link rel="icon" type="image/svg+xml" href="/favicon.svg">
-<link rel="apple-touch-icon" href="/logo.png">
+<link rel="manifest" href="./manifest.json">
+<link rel="icon" href="./favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="./favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
+<link rel="icon" type="image/svg+xml" href="./favicon.svg">
+<link rel="apple-touch-icon" href="./logo.png">
 <meta name="theme-color" content="#8DA399">
 
 <!-- Semantic JSON-LD (AEO - Answer Engine Optimization for ChatGPT, Perplexity, Claude, Gemini) -->
@@ -1273,7 +1271,8 @@ body{font-family:'Inter',-apple-system,sans-serif;background:var(--cream);color:
 // ============================================================
 // CORE ENGINE — Glass-Tech 2026 (FULLY FIXED)
 // ============================================================
-const socket=io();const USER_ID=localStorage.getItem('gt-uid')||('user-'+Math.random().toString(36).substr(2,9));localStorage.setItem('gt-uid',USER_ID);
+const socket=(typeof io==='function')?io():{on(){},emit(){}};const USER_ID=localStorage.getItem('gt-uid')||('user-'+Math.random().toString(36).substr(2,9));localStorage.setItem('gt-uid',USER_ID);
+function escHtml(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
 let userXP=0,userLevel=1,userProfile={},soundEnabled=true,chosenAvatar='🧑‍💻';
 // Loading — sync with progress bar (1.8s bar + smooth buffer)
 document.addEventListener('DOMContentLoaded',()=>{
@@ -1374,10 +1373,10 @@ function showToast(m,t='info'){const c=document.getElementById('toastContainer')
 socket.on('online-count',n=>{document.getElementById('onlineNum').textContent=n;});
 socket.emit('set-user',{userId:USER_ID,username:localStorage.getItem('gt-username')||USER_ID});
 // ── GLOBAL CHAT ──
-const GlobalChat=(()=>{let open=false;const panel=document.getElementById('gcPanel');const toggle=document.getElementById('gcToggle');document.getElementById('gcInput').addEventListener('keydown',e=>{if(e.key==='Enter')send();});function show(){open=true;panel.classList.add('open');toggle.classList.add('has-chat');}function hide(){open=false;panel.classList.remove('open');toggle.classList.remove('has-chat');}function toggleFn(){open?hide():show();}function send(){const inp=document.getElementById('gcInput');const text=inp.value.trim();if(!text)return;inp.value='';socket.emit('global-chat',{userId:USER_ID,username:localStorage.getItem('gt-username')||USER_ID.slice(0,8),text});}socket.on('global-chat',msg=>{const div=document.getElementById('gcMessages');const m=document.createElement('div');m.className='gc-msg';m.innerHTML=`<div class="gc-user">${msg.username}</div><div>${msg.text}</div>`;div.appendChild(m);div.scrollTop=div.scrollHeight;if(!open)toggle.style.animation='vPulse 1s ease 3';});return{toggle:toggleFn,send};})();
+const GlobalChat=(()=>{let open=false;const panel=document.getElementById('gcPanel');const toggle=document.getElementById('gcToggle');document.getElementById('gcInput').addEventListener('keydown',e=>{if(e.key==='Enter')send();});function show(){open=true;panel.classList.add('open');toggle.classList.add('has-chat');}function hide(){open=false;panel.classList.remove('open');toggle.classList.remove('has-chat');}function toggleFn(){open?hide():show();}function send(){const inp=document.getElementById('gcInput');const text=inp.value.trim();if(!text)return;inp.value='';socket.emit('global-chat',{userId:USER_ID,username:localStorage.getItem('gt-username')||USER_ID.slice(0,8),text});}socket.on('global-chat',msg=>{const div=document.getElementById('gcMessages');const m=document.createElement('div');m.className='gc-msg';const uEl=document.createElement('div');uEl.className='gc-user';uEl.textContent=msg.username||'Anon';const tEl=document.createElement('div');tEl.textContent=msg.text||'';m.append(uEl,tEl);div.appendChild(m);div.scrollTop=div.scrollHeight;if(!open)toggle.style.animation='vPulse 1s ease 3';});return{toggle:toggleFn,send};})();
 // ── ACTIVITY FEED ──
-socket.on('activity-feed',d=>{const f=document.getElementById('feedItems');const item=document.createElement('div');item.className='feed-item';item.innerHTML=`<span class="feed-dot"></span><span class="feed-user">${d.username}</span> played ${d.game} (+${d.xp} XP)`;f.prepend(item);if(f.children.length>10)f.lastChild.remove();});
-fetch('/api/activity-feed').then(r=>r.json()).then(items=>{const f=document.getElementById('feedItems');items.slice(0,5).forEach(d=>{const item=document.createElement('div');item.className='feed-item';item.innerHTML=`<span class="feed-dot"></span><span class="feed-user">${d.username||'user'}</span> played ${d.game}`;f.appendChild(item);});}).catch(()=>{});
+socket.on('activity-feed',d=>{const f=document.getElementById('feedItems');const item=document.createElement('div');item.className='feed-item';item.innerHTML=`<span class="feed-dot"></span><span class="feed-user">${escHtml(d.username)}</span> played ${escHtml(d.game)} (+${Number(d.xp)||0} XP)`;f.prepend(item);if(f.children.length>10)f.lastChild.remove();});
+fetch('/api/activity-feed').then(r=>r.json()).then(items=>{const f=document.getElementById('feedItems');items.slice(0,5).forEach(d=>{const item=document.createElement('div');item.className='feed-item';item.innerHTML=`<span class="feed-dot"></span><span class="feed-user">${escHtml(d.username||'user')}</span> played ${escHtml(d.game)}`;f.appendChild(item);});}).catch(()=>{});
 // ── PROFILE ──
 function pickAvatar(a){chosenAvatar=a;}
 function saveProfile(){const u=document.getElementById('profileUsername').value.trim()||'Explorer';localStorage.setItem('gt-username',u);fetch('/api/user/profile',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({userId:USER_ID,username:u,bio:document.getElementById('profileBio').value.trim(),avatar:chosenAvatar})}).then(()=>{document.getElementById('profileModal').classList.remove('show');showToast('Profile saved!','success');loadProfile();socket.emit('set-user',{userId:USER_ID,username:u});}).catch(()=>{});}
@@ -3887,8 +3886,9 @@ const AmiChat=(()=>{
     const lower=text.toLowerCase().trim();
     if(lower==='/trivia'||lower==='trivia'){
       const t=TRIVIA[Math.floor(Math.random()*TRIVIA.length)];
-      miniGameState={type:'trivia',answer:t.a};
       const shuffled=[...t.opts].sort(()=>Math.random()-0.5);
+      const idx=shuffled.indexOf(t.a);
+      miniGameState={type:'trivia',answer:t.a,letter:idx>=0?String.fromCharCode(65+idx):''};
       let html='🎯 **TRIVIA TIME!**\n\n'+t.q+'\n\n';
       shuffled.forEach((o,i)=>html+=String.fromCharCode(65+i)+'. '+o+'\n');
       html+='\nType your answer (A, B, C, or D)!';
@@ -3916,7 +3916,9 @@ const AmiChat=(()=>{
     if(miniGameState){
       if(miniGameState.type==='trivia'){
         const ans=miniGameState.answer;
-        if(text.toLowerCase().includes(ans.toLowerCase())){
+        const guess=text.trim().toLowerCase();
+        const letterOk=miniGameState.letter&&guess===miniGameState.letter.toLowerCase();
+        if(letterOk||guess.includes(ans.toLowerCase())){
           addMessage('✅ **Correct!** The answer is: '+ans+' 🎉\n\n+15 XP! Type /trivia for another!','ami');
           addXP(15,'trivia');showConfetti();
         } else {
@@ -4013,13 +4015,13 @@ const AmiChat=(()=>{
   function renderFlashcards(cards,topic){
     const container=document.createElement('div');
     container.className='chat-msg ami';
-    let html='<div class="ami-label">🌿 Ami</div><div style="margin-bottom:8px;font-weight:700">📋 Flashcards: '+topic+'</div>';
+    let html='<div class="ami-label">🌿 Ami</div><div style="margin-bottom:8px;font-weight:700">📋 Flashcards: '+escHtml(topic)+'</div>';
     html+='<div class="flashcard-deck">';
     cards.forEach((c,i)=>{
       html+=`<div class="flashcard" onclick="this.classList.toggle('flipped')" title="Click to flip">
         <div class="flashcard-inner">
-          <div class="flashcard-front"><span class="fc-num">${i+1}</span>${c.front||c.q||'?'}</div>
-          <div class="flashcard-back">${c.back||c.a||'?'}</div>
+          <div class="flashcard-front"><span class="fc-num">${i+1}</span>${escHtml(c.front||c.q||'?')}</div>
+          <div class="flashcard-back">${escHtml(c.back||c.a||'?')}</div>
         </div>
       </div>`;
     });
@@ -4304,7 +4306,13 @@ const ImageLab=(()=>{
           const d=document.createElement('div');
           d.className='gallery-thumb';
           d.title=item.prompt||'';
-          d.innerHTML='<img src="'+item.url+'" alt="'+(item.prompt||'')+'" loading="lazy" style="width:100%;height:100%;object-fit:cover" onerror="this.parentElement.style.display=\'none\'">';
+          const imgEl=document.createElement('img');
+          imgEl.src=item.url;
+          imgEl.alt=item.prompt||'';
+          imgEl.loading='lazy';
+          imgEl.style.cssText='width:100%;height:100%;object-fit:cover';
+          imgEl.onerror=()=>{d.style.display='none';};
+          d.appendChild(imgEl);
           d.onclick=()=>{
             if(display){
               display.innerHTML='';
@@ -4326,7 +4334,7 @@ const ImageLab=(()=>{
   return{generate,generateFromPrompt,loadGallery};
 })();
 // LEADERBOARD
-function loadLeaderboard(){fetch('/api/leaderboard').then(r=>r.json()).then(data=>{const list=document.getElementById('leaderboardList');if(!data.length){list.innerHTML='<li style="justify-content:center;color:var(--charcoal-light);font-size:12px;">No players yet!</li>';return;}list.innerHTML=data.map((u,i)=>{const rc=i===0?'gold':i===1?'silver':i===2?'bronze':'';const name=u.id===USER_ID?`⭐ ${userProfile.username||'You'}`:(u.username||u.id.slice(0,12));return`<li><div class="lb-rank ${rc}">${i+1}</div><span style="font-size:16px;margin-right:4px">${u.avatar||'🧑‍💻'}</span><span class="lb-name">${name}</span><span class="lb-xp">${u.xp} XP (Lv.${u.level})</span></li>`;}).join('');}).catch(()=>{});}
+function loadLeaderboard(){fetch('/api/leaderboard').then(r=>r.json()).then(data=>{const list=document.getElementById('leaderboardList');if(!data.length){list.innerHTML='<li style="justify-content:center;color:var(--charcoal-light);font-size:12px;">No players yet!</li>';return;}list.innerHTML=data.map((u,i)=>{const rc=i===0?'gold':i===1?'silver':i===2?'bronze':'';const name=u.id===USER_ID?`⭐ ${userProfile.username||'You'}`:(u.username||u.id.slice(0,12));return`<li><div class="lb-rank ${rc}">${i+1}</div><span style="font-size:16px;margin-right:4px">${escHtml(u.avatar||'🧑‍💻')}</span><span class="lb-name">${escHtml(name)}</span><span class="lb-xp">${Number(u.xp)||0} XP (Lv.${Number(u.level)||1})</span></li>`;}).join('');}).catch(()=>{});}
 // KEYBOARD SHORTCUTS (disabled when game panels or inputs are focused)
 document.addEventListener('keydown', e => {
   if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.tagName === 'SELECT') return;
@@ -4773,10 +4781,12 @@ window.Models3D = (() => {
       loaderDiv.innerText = "Loading 3D...";
       container.appendChild(loaderDiv);
       scene = new THREE.Scene();
-      camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.1, 1000);
+      const cw = container.clientWidth || 320;
+      const ch = container.clientHeight || 320;
+      camera = new THREE.PerspectiveCamera(45, cw / ch, 0.1, 1000);
       renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
       renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-      renderer.setSize(container.clientWidth, container.clientHeight);
+      renderer.setSize(cw, ch);
       renderer.outputEncoding = THREE.sRGBEncoding;
       
       scene.add(new THREE.AmbientLight(0xffffff, options.ambientIntensity || 0.8));
@@ -4805,6 +4815,8 @@ window.Models3D = (() => {
         container.removeChild(loaderDiv);
         container.appendChild(renderer.domElement);
         animate();
+      }, undefined, () => {
+        loaderDiv.innerText = "3D model unavailable";
       });
       let isDragging = false, dragged = false, prevX = 0, prevY = 0;
       container.addEventListener('mousedown', (e) => { isDragging = true; dragged = false; prevX = e.clientX; prevY = e.clientY; });

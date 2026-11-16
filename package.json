@@ -5,7 +5,8 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "dev": "node --watch server.js"
+    "dev": "node --watch server.js",
+    "check": "node --check server.js && node --check image-api-new.js"
   },
   "dependencies": {
     "compression": "^1.8.1",
@@ -26,7 +27,7 @@
     "engineering"
   ],
   "author": "Myself Teja Priyan",
-  "license": "ISC",
+  "license": "UNLICENSED",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/TejaPriyan/myself-tejapriyan.git"
